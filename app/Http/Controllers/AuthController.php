@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
@@ -24,20 +26,62 @@ class AuthController extends Controller
             'nama.required' => 'Nama harus diisi.',
             'email.required' => 'Email harus diisi.',
             'email.email' => 'Format email tidak valid.',
-            'email.unique' => 'Email sudah terdaftar.',
             'password.required' => 'Password harus diisi.',
             'password.min' => 'Password minimal 8 karakter.',
         ]);
 
+        $existingUser = User::where('email', $validatedData['email'])->first();
+
+        if ($existingUser) {
+            if ($existingUser->status === 'Active') {
+                return back()->withErrors([
+                    'email' => 'Email sudah digunakan. Silakan login.'
+                ])->withInput();
+            } else {
+                // Belum aktif → arahkan ke OTP
+                return redirect()->route('otp.send', ['id' => $existingUser->id])
+                    ->with('info', 'Akun Anda belum aktif. OTP dikirim ulang ke email.');
+            }
+        }
+
         // Buat user baru
-        $user = \App\Models\User::create([
+        $user = User::create([
             'nama' => $validatedData['nama'],
             'email' => $validatedData['email'],
             'password' => Hash::make($validatedData['password']),
         ]);
 
-        // Redirect ke halaman login setelah registrasi sukses
-        return redirect('/login')->with('success', 'Registrasi berhasil! Silakan login.');
+        Auth::login($user);
+
+        return redirect()->route('otp.send', ['id' => $user->id])
+            ->with('success', 'Registrasi berhasil! Silakan verifikasi akun Anda.');
+    }
+
+    public function googleRedirect()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    public function googleCallback()
+    {
+        try {
+            $googleUser = Socialite::driver('google')->user();
+            $user = User::where('email', $googleUser->getEmail())->first();
+
+            if (!$user) {
+                $user = User::updateOrCreate([
+                    'nama' => $googleUser->getName(),
+                    'email' => $googleUser->getEmail(),
+                    'password' => Hash::make(uniqid()),
+                    'status' => 'Active',
+                ]);
+            }
+
+            Auth::login($user);
+            return redirect('/');
+        } catch (\Exception $e) {
+            return redirect('/login')->withErrors('Gagal login dengan Google. Silakan coba lagi.');
+        }
     }
 
     public function indexLogin()
@@ -66,6 +110,12 @@ class AuthController extends Controller
         return back()->withErrors(
             'Maaf email atau password Anda salah.'
         )->onlyInput('email');
+    }
+
+    public function sendOtp()
+    {
+        $user = Auth::user();
+        return view('auth.otp-send', ['email' => $user->email]);
     }
 
     public function logout(Request $request)

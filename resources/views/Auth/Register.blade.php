@@ -26,28 +26,38 @@
 
 <body>
     <div class="flex p-15 h-screen">
-        <div class="w-1/2 text-center">
+        <div class="w-1/2 flex flex-col justify-center items-center">
             <h1 class="p-4 font-black font-noto text-2xl">FinTrack</h1>
             <h1 class="text-3xl font-black font-noto">Lets Start with <span class="text-blue-500">FinTrack</span>
             </h1>
             <p class="font-poppins text-sm">Please Register Your Account</p>
             <div>
-                <form action="/register/create" method="POST">
+                <form action="{{ route('register.create') }}" method="POST">
                     @csrf
-                    <div class="pt-6 p-1">
+                    <div class="pt-6">
                         <input class="p-4 w-sm bg-[#F8FAFC] rounded-xl" type="text" name="nama" id="nama"
                             required placeholder="Username">
-                    </div>
-                    <div class="p-4">
-                        <input class="p-4 w-sm bg-[#F8FAFC] rounded-xl" type="email" name="email" id="email"
-                            required placeholder="Email">
-                    </div>
-                    <div>
-                        <input class="p-4 w-sm bg-[#F8FAFC] rounded-xl" type="password" name="password" id="password"
-                            required placeholder="Password">
+                        @if ($errors->has('nama'))
+                            <p class="text-red-500 text-left">{{ $errors->first('nama') }}</p>
+                        @endif
                     </div>
                     <div class="pt-4">
-                        <button class="w-sm bg-[#3B82F6] p-4 rounded-xl text-white font-semibold">Register</button>
+                        <input class="p-4 w-sm bg-[#F8FAFC] rounded-xl" type="email" name="email" id="email"
+                            required placeholder="Email">
+                        @if ($errors->has('email'))
+                            <p class="text-red-500 text-sm pb-0">{{ $errors->first('email') }}</p>
+                        @endif
+                    </div>
+                    <div class="pt-4">
+                        <input class="p-4 w-sm bg-[#F8FAFC] rounded-xl" type="password" name="password" id="password"
+                            required placeholder="Password">
+                        @if ($errors->has('password'))
+                            <p class="text-red-500 text-sm pb-0">{{ $errors->first('password') }}</p>
+                        @endif
+                    </div>
+                    <div class="pt-4">
+                        <button
+                            class="w-sm bg-blue-500 p-4 rounded-xl text-white font-semibold cursor-pointer">Register</button>
                     </div>
                     <div class="flex items-center justify-center p-2">
                         <div class="w-12 border-t border-gray-300"></div>
@@ -58,21 +68,24 @@
 
                         <div class="w-12 border-t border-gray-300"></div>
                     </div>
-                    <div>
-
-                        <button
-                            class="w-xs bg-white border-gray-300 border-1 p-4 rounded-xl text-black font-medium"><img
-                                src="{{ asset('image/google.png') }}" alt="google logo"
-                                class="inline w-6 h-6 mr-2">Google</button>
+                    <div class="flex justify-center items-center">
+                        <a href="{{ route('google.redirect') }}"
+                            class="w-xs bg-white border-gray-300 border-1 p-4 rounded-xl text-black cursor-pointer font-medium flex items-center justify-center">
+                            <img src="{{ asset('image/google.png') }}" alt="google logo"
+                                class="inline w-6 h-6 mr-2">Google</a>
                     </div>
                 </form>
             </div>
             <p class="text-sm p-2">Already have an account? <a href="{{ route('login') }}"
-                    class="text-[#3B82F6] font-semibold">Sign
+                    class="text-blue-500 font-semibold">Sign
                     In</a></p>
         </div>
-        <div class="flex flex-col w-1/2 text-white font-bold text-4xl">
-            <img src="{{ asset('image/image-auth.png') }}" alt="" class="h-fit w-fit object-cover mt-auto">
+        <div class="flex flex-col w-1/2 font-bold text-4xl justify-center items-center">
+            <div class="flex items-center">
+                <img src="{{ asset('image/logo.png') }}" alt="" class="h-12 w-12">
+                <h1 class="p-4 font-black font-noto text-4xl">Fin<span class="text-blue-500">Track</span></h1>
+            </div>
+            <img src="{{ asset('image/image-auth.png') }}" alt="" class="h-fit w-fit object-cover mt-2">
         </div>
     </div>
 </body>

@@ -27,6 +27,7 @@ class User extends Authenticatable
         'nama',
         'email',
         'password',
+        'status',
         'otp'
     ];
 
@@ -60,6 +61,10 @@ class User extends Authenticatable
         return $this->hasMany(Laporan::class, 'id');
     }
 
+    public function otp()
+    {
+        return $this->hasMany(UserOtp::class, 'id');
+    }
     /**
      * The attributes that should be hidden for serialization.
      *

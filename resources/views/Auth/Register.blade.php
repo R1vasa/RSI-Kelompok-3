@@ -32,7 +32,7 @@
             </h1>
             <p class="font-poppins text-sm">Please Register Your Account</p>
             <div>
-                <form action="{{ route('register.create') }}" method="POST">
+                <form action="{{ route('register.create')}}" method="POST">
                     @csrf
                     <div class="pt-6">
                         <input class="p-4 w-sm bg-[#F8FAFC] rounded-xl" type="text" name="nama" id="nama"

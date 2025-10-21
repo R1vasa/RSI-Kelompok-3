@@ -8,7 +8,7 @@ class Goals extends Model
 {
     protected $table = 'goals';
     protected $primaryKey = 'id';
-    protected $fillable = ['id_users', 'judul_goals', 'jumlah_target', 'current_amount', 'tgl_target'];
+    protected $fillable = ['id_users', 'judul_goals', 'jumlah_target', 'current_amount', 'tgl_target','gambar'];
 
     public function pengguna()
     {

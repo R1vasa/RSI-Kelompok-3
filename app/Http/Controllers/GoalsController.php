@@ -1,0 +1,126 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Goals;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use App\Models\Tabungan;
+
+class GoalsController extends Controller
+{
+    public function index()
+    {
+        $goals = Goals::where('id_users', Auth::id())->get();
+
+        foreach ($goals as $goal) {
+            $goal->status = $goal->current_amount >= $goal->jumlah_target
+                ? 'Tercapai'
+                : 'Belum Tercapai';
+        }
+
+        return view('pages.goals', compact('goals'));
+    }
+
+    public function create()
+    {
+        return view('pages.goals_tambah');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'judul_goals' => 'required|string|max:255',
+            'jumlah_target' => 'required|numeric|min:1',
+            'tgl_target' => 'required|date',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        // Simpan gambar (jika ada)
+        $gambarPath = $request->hasFile('gambar')
+            ? $request->file('gambar')->store('goals', 'public')
+            : null;
+
+        Goals::create([
+            'id_users' => Auth::id(),
+            'judul_goals' => $validated['judul_goals'],
+            'jumlah_target' => $validated['jumlah_target'],
+            'tgl_target' => $validated['tgl_target'],
+            'current_amount' => 0,
+            'gambar' => $gambarPath,
+        ]);
+
+        return redirect()->route('goals.index')->with('success', 'Goals berhasil ditambahkan.');
+    }
+
+    public function edit($id)
+    {
+        $goals = Goals::where('id_users', Auth::id())->findOrFail($id);
+        return view('pages.goals_edit', compact('goals'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $goal = Goals::where('id_users', Auth::id())->findOrFail($id);
+
+        $validated = $request->validate([
+            'judul_goals' => 'required|string|max:255',
+            'jumlah_target' => 'required|numeric|min:1',
+            'tgl_target' => 'required|date',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        // Simpan gambar baru (hapus lama jika ada)
+        if ($request->hasFile('gambar')) {
+            if ($goal->gambar && Storage::disk('public')->exists($goal->gambar)) {
+                Storage::disk('public')->delete($goal->gambar);
+            }
+
+            $validated['gambar'] = $request->file('gambar')->store('goals', 'public');
+        }
+
+        $goal->update($validated);
+
+        return redirect()->route('goals.index')->with('success', 'Goals berhasil diperbarui.');
+    }
+
+    public function destroy($id)
+    {
+        $goal = Goals::where('id_users', Auth::id())->findOrFail($id);
+
+        // Hapus gambar jika ada
+        if ($goal->gambar && Storage::disk('public')->exists($goal->gambar)) {
+            Storage::disk('public')->delete($goal->gambar);
+        }
+
+        $goal->delete();
+
+        return redirect()->route('goals.index')->with('success', 'Goals berhasil dihapus.');
+    }
+
+    public function setorCreate($id)
+    {
+        $goals = Goals::findOrFail($id);
+        return view('pages.setor_tambah', compact('goals'));
+    }
+
+    public function setorStore(Request $request, $id)
+    {
+        $request->validate([
+            'jumlah_tabungan' => 'required|numeric|min:1000',
+        ]);
+
+        $goals = Goals::findOrFail($id);
+
+        Tabungan::create([
+            'id_goals' => $goals->id,
+            'jumlah_tabungan' => $request->jumlah_tabungan,
+        ]);
+
+        $goals->current_amount += $request->jumlah_tabungan;
+        $goals->save();
+
+        return redirect()->route('goals.index')->with('success', 'Setoran berhasil ditambahkan!');
+    }
+}

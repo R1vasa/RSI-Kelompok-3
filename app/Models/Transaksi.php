@@ -13,7 +13,8 @@ class Transaksi extends Model
         'id_kategori',
         'judul_transaksi',
         'jumlah_transaksi',
-        'tgl_transaksi'
+        'tgl_transaksi',
+        'jenis_transaksi'
     ];
 
     public function pengguna()
@@ -23,6 +24,6 @@ class Transaksi extends Model
 
     public function kategori()
     {
-        return $this->belongsTo(Kategori::class, 'id_kategori');
+        return $this->belongsTo(Kategori::class, 'id_kategori','id');
     }
 }

@@ -26,7 +26,7 @@
 
 <body>
     <div class="flex">
-        <div class="bg-linear-to-t from-[#1C69E6] to-[#3B82F6] h-dvh w-1/5 p-1 flex flex-col fixed">
+        <div class="bg-linear-to-t from-[#1C69E6] to-blue-500 h-dvh w-1/5 p-1 flex flex-col fixed">
             <div>
                 <h1 class="font-noto text-2xl font-bold text-white p-4">FinTrack</h1>
                 <hr class="border-t border-blue-400 opacity-100">

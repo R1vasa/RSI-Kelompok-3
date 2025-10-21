@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -14,8 +15,15 @@ return new class extends Migration
         Schema::create('kategori', function (Blueprint $table) {
             $table->id('id');
             $table->string('kategori', 50);
-            $table->enum('jenis_kategori', ['pemasukan', 'pengeluaran']);
         });
+
+        DB::table('kategori')->insert([
+            ['id' => 1, 'kategori' => 'Jajan'],
+            ['id' => 2, 'kategori' => 'Service'],
+            ['id' => 3, 'kategori' => 'Makan'],
+            ['id' => 4, 'kategori' => 'Transportasi'],
+            ['id' => 5, 'kategori' => 'Lain-lain'],
+        ]);
     }
 
     /**

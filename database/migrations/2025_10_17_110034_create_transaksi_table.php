@@ -19,6 +19,7 @@ return new class extends Migration
             $table->decimal('jumlah_transaksi', 12, 2);
             $table->date('tgl_transaksi');
             $table->timestamps();
+            $table->enum('jenis_transaksi', ['pemasukan', 'pengeluaran']);
         });
     }
 

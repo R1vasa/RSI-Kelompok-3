@@ -26,28 +26,35 @@
 
 <body>
     <div class="flex p-15 h-screen">
-        <div class="flex flex-col w-1/2 text-white font-bold text-4xl">
-            <img src="{{ asset('image/image-auth.png') }}" alt="" class="h-fit w-fit object-cover mt-auto">
+        <div class="flex flex-col w-1/2 font-bold text-4xl justify-center items-center">
+            <div class="flex items-center">
+                <img src="{{ asset('image/logo.png') }}" alt="" class="h-12 w-12">
+                <h1 class="p-4 font-black font-noto text-4xl">Fin<span class="text-blue-500">Track</span></h1>
+            </div>
+            <img src="{{ asset('image/image-auth.png') }}" alt="" class="h-fit w-fit object-cover mt-2">
         </div>
-        <div class="w-1/2 text-center">
-            <h1 class="p-4 font-black font-noto text-2xl">FinTrack</h1>
+        <div class="w-1/2 flex flex-col justify-center items-center">
+
             <h1 class="text-3xl font-black font-noto">Welcome back, <span class="text-blue-500">Pal!</span>
             </h1>
             <p class="font-poppins text-sm">Please Login to Your Account</p>
             <div>
                 <form action="{{ route('login.create') }}" method="POST" class="font-poppins">
                     @csrf
-                    <div class="pt-6 p-4">
+                    <div class="pt-6">
                         <input class="p-4 w-sm bg-[#F8FAFC] rounded-xl" type="email" name="email" id="email"
-                            required placeholder="Email">
+                            required placeholder="Email" value="{{ old('email') }}">
                     </div>
-                    <div>
+                    <div class="py-4">
                         <input class="p-4 w-sm bg-[#F8FAFC] rounded-xl" type="password" name="password" id="password"
                             required placeholder="Password">
                     </div>
-                    <div class="pt-15">
+                    <div class="pt-12">
+                        @if ($errors->any())
+                            <p class="text-red-500 text-sm mb-2">{{ $errors->first() }}</p>
+                        @endif
                         <button
-                            class="w-sm bg-[#3B82F6] p-4 rounded-xl text-white cursor-pointer font-semibold">Login</button>
+                            class="w-sm bg-blue-500 p-4 rounded-xl text-white cursor-pointer font-semibold">Login</button>
                     </div>
                     <div class="flex items-center justify-center p-2">
                         <div class="w-12 border-t border-gray-300"></div>
@@ -58,17 +65,16 @@
 
                         <div class="w-12 border-t border-gray-300"></div>
                     </div>
-                    <div>
-
-                        <button
-                            class="w-xs bg-white border-gray-300 border-1 p-4 rounded-xl text-black cursor-pointer font-medium"><img
-                                src="{{ asset('image/google.png') }}" alt="google logo"
-                                class="inline w-6 h-6 mr-2">Google</button>
+                    <div class="flex justify-center items-center">
+                        <a href="{{ route('google.redirect') }}"
+                            class="w-xs bg-white border-gray-300 border-1 p-4 rounded-xl text-black cursor-pointer font-medium flex items-center justify-center">
+                            <img src="{{ asset('image/google.png') }}" alt="google logo"
+                                class="inline w-6 h-6 mr-2">Google</a>
                     </div>
                 </form>
             </div>
             <p class="text-sm p-2">dont have an account? <a href="{{ route('register') }}"
-                    class="text-[#3B82F6] font-semibold">Sign
+                    class="text-blue-500 font-semibold">Sign
                     Up</a></p>
         </div>
     </div>

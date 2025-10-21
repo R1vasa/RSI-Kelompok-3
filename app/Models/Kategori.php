@@ -8,7 +8,7 @@ class Kategori extends Model
 {
     protected $table = 'kategori';
     protected $primaryKey = 'id';
-    protected $fillable = ['kategori', 'jenis_kategori'];
+    protected $fillable = ['kategori'];
 
     public function transaksi()
     {

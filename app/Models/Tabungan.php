@@ -8,7 +8,7 @@ class Tabungan extends Model
 {
     protected $table = 'tabungan';
     protected $primaryKey = 'id';
-    protected $fillable = ['id_goals', 'jumlah_tabungan', 'tgl_tabungan'];
+    protected $fillable = ['id_goals', 'jumlah_tabungan'];
 
     public function goals()
     {

@@ -105,8 +105,7 @@
 
                     <div class="flex justify-between mt-6">
                         <a href="{{ route('transaksi.index') }}" class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded">Kembali</a>
-                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Simpan</button>
-                        
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Simpan</button>                        
                     </div>
                 </form>
             </div>

@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id('id');
             $table->foreignId('id_goals')->constrained('goals')->onDelete('cascade');
             $table->decimal('jumlah_tabungan', 12, 2);
-            $table->date('tgl_tabungan');
             $table->timestamps();
         });
     }

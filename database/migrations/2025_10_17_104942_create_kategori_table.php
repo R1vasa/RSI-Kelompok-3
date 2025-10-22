@@ -14,8 +14,15 @@ return new class extends Migration
         Schema::create('kategori', function (Blueprint $table) {
             $table->id('id');
             $table->string('kategori', 50);
-            $table->enum('jenis_kategori', ['pemasukan', 'pengeluaran']);
         });
+
+        DB::table('kategori')->insert([
+            ['kategori' => 'Jajan'],
+            ['kategori' => 'Service'],
+            ['kategori' => 'Makan'],
+            ['kategori' => 'Transportasi'],
+            ['kategori' => 'Lain-lain'],
+        ]);
     }
 
     /**

@@ -39,7 +39,7 @@
                             class="block text-md font-medium hover:text-blue-200 transition duration-150">Transaksi</a>
                         <a href="#"
                             class="block text-md font-medium hover:text-blue-200 transition duration-150">Anggaran</a>
-                        <a href="#"
+                        <a href="{{route ('goals.index')}}"
                             class="block text-md font-medium hover:text-blue-200 transition duration-150">Target
                             Goals</a>
                         <a href="#"
@@ -81,7 +81,7 @@
                 @endforeach
             </ul>
         </div>
-    @endif
+                @endif
                 <form action="{{ route('goals.update', $goals->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
@@ -104,7 +104,7 @@
                         <input type="file" name="gambar" accept="image/*" class="w-full border rounded px-3 py-2">
 
                     <div class="flex justify-between mt-6">
-                        <a href="{{ route('transaksi.index') }}" class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded">Kembali</a>
+                        <a href="{{ route('goals.index') }}" class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded">Kembali</a>
                         <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Simpan</button>                        
                     </div>
                 </form>

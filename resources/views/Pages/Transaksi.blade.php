@@ -140,11 +140,11 @@
                 <tbody>
                     @foreach ($transaksis as $transaksi)
                         <tr class="border-b">
-                            <td class="px-4 py-2 font-poppins">{{ $transaksi->judul_transaksi }}</td>
-                            <td class="px-4 py-2 font-poppins">{{ $transaksi->kategori->kategori }}</td>
-                            <td class="px-4 py-2 font-poppins">{{ ucfirst($transaksi->jenis_transaksi) }}</td>
-                            <td class="px-4 py-2 font-poppins">Rp {{ number_format($transaksi->jumlah_transaksi, 0, ',', '.') }}</td>
-                            <td class="px-4 py-2 font-poppins">{{ \Carbon\Carbon::parse($transaksi->tgl_transaksi)->format('d-m-Y') }}</td>
+                            <td class="px-4 py-2 text-center font-poppins">{{ $transaksi->judul_transaksi }}</td>
+                            <td class="px-4 py-2 text-center font-poppins">{{ $transaksi->kategori->kategori }}</td>
+                            <td class="px-4 py-2 text-center font-poppins">{{ ucfirst($transaksi->jenis_transaksi) }}</td>
+                            <td class="px-4 py-2 text-center font-poppins">Rp {{ number_format($transaksi->jumlah_transaksi, 0, ',', '.') }}</td>
+                            <td class="px-4 py-2 text-center font-poppins">{{ \Carbon\Carbon::parse($transaksi->tgl_transaksi)->format('d-m-Y') }}</td>
                             
                             <td class="flex justify-center gap-3">
                             <a href="{{ route('transaksi.edit', $transaksi->id) }}" 

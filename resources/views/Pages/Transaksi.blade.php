@@ -11,6 +11,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
     </style>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     @vite('resources/css/app.css')
     <style>
         .font-noto {
@@ -134,39 +135,41 @@
                                 <th class="px-4 py-2 text-center font-poppins">Jenis</th>
                                 <th class="px-4 py-2 text-center font-poppins">Jumlah</th>
                                 <th class="px-4 py-2 text-center font-poppins">Tanggal</th>
-                                <th class="px-4 py-2 text-center font-poppins"></th>
-                                <th class="px-4 py-2 text-center font-poppins"></th>
+                                <th class="px-4 py-2 text-center font-poppins">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($transaksis as $transaksi)
                                 <tr class="border-b">
-                                    <td class="px-4 py-2 font-poppins">{{ $transaksi->judul_transaksi }}</td>
-                                    <td class="px-4 py-2 font-poppins">{{ $transaksi->kategori->kategori }}</td>
-                                    <td class="px-4 py-2 font-poppins">{{ ucfirst($transaksi->jenis_transaksi) }}</td>
-                                    <td class="px-4 py-2 font-poppins">Rp
+                                    <td class="px-4 py-2 font-poppins text-center">{{ $transaksi->judul_transaksi }}
+                                    </td>
+                                    <td class="px-4 py-2 font-poppins text-center">{{ $transaksi->kategori->kategori }}
+                                    </td>
+                                    <td class="px-4 py-2 font-poppins text-center">
+                                        {{ ucfirst($transaksi->jenis_transaksi) }}</td>
+                                    <td class="px-4 py-2 font-poppins text-center">Rp
                                         {{ number_format($transaksi->jumlah_transaksi, 0, ',', '.') }}</td>
-                                    <td class="px-4 py-2 font-poppins">
+                                    <td class="px-4 py-2 font-poppins text-center">
                                         {{ \Carbon\Carbon::parse($transaksi->tgl_transaksi)->format('d-m-Y') }}</td>
 
-                                    <td class="flex justify-center gap-3">
-                                        <a href="{{ route('transaksi.edit', $transaksi->id) }}"
-                                            class="bg-green-400 hover:bg-green-600 text-white p-2 rounded-md font-poppins flex items-center justify-center">
-                                            <img src="https://img.icons8.com/?size=100&id=114092&format=png&color=000000"
-                                                alt="Edit" class="w-5 h-5">
-                                        </a>
+                                    <td class="text-center">
+                                        <div class="flex justify-center items-center gap-3">
+                                            <a href="{{ route('transaksi.edit', $transaksi->id) }}"
+                                                class="bg-green-400 hover:bg-green-600 text-white p-1 rounded-md font-poppins flex items-center justify-center">
+                                                <i class='bx bxs-edit text-2xl'></i>
+                                            </a>
 
-                                        <form action="{{ route('transaksi.destroy', $transaksi->id) }}" method="POST"
-                                            onsubmit="return confirm('Yakin ingin menghapus?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                onclick="return confirm('Yakin ingin hapus goal ini?')"
-                                                class="bg-red-400 hover:bg-red-600 text-white p-2 rounded-md font-poppins flex items-center justify-center">
-                                                <img src="https://img.icons8.com/?size=100&id=9deX0HJ5iAFS&format=png&color=000000"
-                                                    alt="Hapus" class="w-5 h-5">
-                                            </button>
-                                        </form>
+                                            <form action="{{ route('transaksi.destroy', $transaksi->id) }}"
+                                                method="POST" onsubmit="return confirm('Yakin ingin menghapus?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    onclick="return confirm('Yakin ingin hapus goal ini?')"
+                                                    class="bg-red-400 hover:bg-red-600 text-white p-1 rounded-md font-poppins flex items-center justify-center">
+                                                    <i class='bx bx-trash text-2xl'></i>
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                             @endforeach
                         </tbody>

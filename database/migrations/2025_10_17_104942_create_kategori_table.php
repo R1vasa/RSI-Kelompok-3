@@ -18,11 +18,11 @@ return new class extends Migration
         });
 
         DB::table('kategori')->insert([
-            ['id' => 1, 'kategori' => 'Jajan'],
-            ['id' => 2, 'kategori' => 'Service'],
-            ['id' => 3, 'kategori' => 'Makan'],
-            ['id' => 4, 'kategori' => 'Transportasi'],
-            ['id' => 5, 'kategori' => 'Lain-lain'],
+            ['kategori' => 'Jajan'],
+            ['kategori' => 'Service'],
+            ['kategori' => 'Makan'],
+            ['kategori' => 'Transportasi'],
+            ['kategori' => 'Lain-lain'],
         ]);
     }
 

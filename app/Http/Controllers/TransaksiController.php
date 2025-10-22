@@ -33,7 +33,7 @@ class TransaksiController extends Controller
         $validated = $request->validate([
             'judul_transaksi' => 'required|string|max:255',
             'jumlah_transaksi' => 'required|numeric|min:0',
-            'jenis_transaksi' => 'required|in:pemasukan,pengeluaran',
+            'jenis_transaksi' => 'required|in:Pemasukan,Pengeluaran',
             'tgl_transaksi' => 'required|date',
             'id_kategori' => 'required|exists:kategori,id'
         ]);

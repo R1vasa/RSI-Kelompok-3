@@ -39,7 +39,7 @@
                             class="block text-md font-medium hover:text-blue-200 transition duration-150">Transaksi</a>
                         <a href="#"
                             class="block text-md font-medium hover:text-blue-200 transition duration-150">Anggaran</a>
-                        <a href="#"
+                        <a href="{{route ('goals.index')}}"
                             class="block text-md font-medium hover:text-blue-200 transition duration-150">Target
                             Goals</a>
                         <a href="#"
@@ -90,8 +90,8 @@
                     <div class="mb-3">
                         <label class="block font-medium">Jenis</label>
                         <select name="jenis_transaksi" class="w-full border rounded-full px-3 py-2" required>
-                            <option value="pemasukan">Pemasukan</option>
-                            <option value="pengeluaran">Pengeluaran</option>
+                            <option value="Pemasukan">Pemasukan</option>
+                            <option value="Pengeluaran">Pengeluaran</option>
                         </select>
                     </div>
                     <div class="mb-3">

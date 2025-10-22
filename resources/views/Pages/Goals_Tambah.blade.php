@@ -39,7 +39,7 @@
                             class="block text-md font-medium hover:text-blue-200 transition duration-150">Transaksi</a>
                         <a href="#"
                             class="block text-md font-medium hover:text-blue-200 transition duration-150">Anggaran</a>
-                        <a href="#"
+                        <a href="{{route ('goals.index')}}"
                             class="block text-md font-medium hover:text-blue-200 transition duration-150">Target
                             Goals</a>
                         <a href="#"

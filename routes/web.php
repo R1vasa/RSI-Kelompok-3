@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\GoalsController;
 use App\Http\Middleware\Verification;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return Auth::check() ? view('Pages/Dashboard') : redirect('/login');

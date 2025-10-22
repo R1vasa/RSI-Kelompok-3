@@ -23,7 +23,7 @@ class TransaksiController extends Controller
     public function create()
     {
         // Ambil kategori dari tabel kategori (referensi)
-        return view('pages/transaksi_tambah' , [
+        return view('pages/transaksi_tambah', [
             'kategoris' => Kategori::all()
         ]);
     }
@@ -49,35 +49,35 @@ class TransaksiController extends Controller
 
         return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil ditambahkan.');
     }
-    
+
     public function edit($id)
-{
-    $transaksi = Transaksi::where('id_users', Auth::id())->findOrFail($id);
-    $kategoris = \App\Models\Kategori::all();
-    return view('pages/transaksi_edit', compact('transaksi', 'kategoris'));
-}
+    {
+        $transaksi = Transaksi::where('id_users', Auth::id())->findOrFail($id);
+        $kategoris = \App\Models\Kategori::all();
+        return view('pages/transaksi_edit', compact('transaksi', 'kategoris'));
+    }
 
-public function update(Request $request, $id)
-{
-    $validated = $request->validate([
-        'judul_transaksi' => 'required|string|max:255',
-        'jumlah_transaksi' => 'required|numeric|min:0',
-        'jenis_transaksi' => 'required|in:Pemasukan,Pengeluaran',
-        'tgl_transaksi' => 'required|date',
-        'id_kategori' => 'required|exists:kategori,id'
-    ]);
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'judul_transaksi' => 'required|string|max:255',
+            'jumlah_transaksi' => 'required|numeric|min:0',
+            'jenis_transaksi' => 'required|in:pemasukan,pengeluaran',
+            'tgl_transaksi' => 'required|date',
+            'id_kategori' => 'required|exists:kategori,id'
+        ]);
 
-    $transaksi = Transaksi::where('id_users', Auth::id())->findOrFail($id);
-    $transaksi->update($validated);
+        $transaksi = Transaksi::where('id_users', Auth::id())->findOrFail($id);
+        $transaksi->update($validated);
 
-    return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil diperbarui.');
-}
+        return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil diperbarui.');
+    }
 
-public function destroy($id)
-{
-    $transaksi = Transaksi::where('id_users', Auth::id())->findOrFail($id);
-    $transaksi->delete();
+    public function destroy($id)
+    {
+        $transaksi = Transaksi::where('id_users', Auth::id())->findOrFail($id);
+        $transaksi->delete();
 
-    return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil dihapus.');
-}
+        return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil dihapus.');
+    }
 }

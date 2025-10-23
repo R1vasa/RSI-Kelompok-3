@@ -31,10 +31,16 @@ class GoalsController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'judul_goals' => 'required|string|max:255',
+            'judul_goals' => 'required|string|max:40',
             'jumlah_target' => 'required|numeric|min:1',
-            'tgl_target' => 'required|date',
+            'tgl_target' => 'required|date|after_or_equal:today',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ], [
+             'judul_goals' => 'Judul goals maksimal 40 karakter',
+            'jumlah_target' => 'Jumlah target harus diisi angka positif',
+            'tgl_target' => 'Tanggal target tidak boleh kurang dari tanggal sekarang',
+            'gambar' => 'Gambar harus berupa file gambar (jpg, jpeg, png)',
+            'gambar' => 'Ukuran gambar maksimal 2MB',
         ]);
 
         // Simpan gambar (jika ada)
@@ -65,10 +71,16 @@ class GoalsController extends Controller
         $goal = Goals::where('id_users', Auth::id())->findOrFail($id);
 
         $validated = $request->validate([
-            'judul_goals' => 'required|string|max:255',
+            'judul_goals' => 'required|string|max:40',
             'jumlah_target' => 'required|numeric|min:1',
-            'tgl_target' => 'required|date',
+            'tgl_target' => 'required|date|after_or_equal:today',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ], [
+             'judul_goals' => 'Judul goals maksimal 40 karakter',
+            'jumlah_target' => 'Jumlah target harus diisi angka positif',
+            'tgl_target' => 'Tanggal target tidak boleh kurang dari tanggal sekarang',
+            'gambar' => 'Gambar harus berupa file gambar (jpg, jpeg, png)',
+            'gambar' => 'Ukuran gambar maksimal 2MB',
         ]);
 
         // Simpan gambar baru (hapus lama jika ada)

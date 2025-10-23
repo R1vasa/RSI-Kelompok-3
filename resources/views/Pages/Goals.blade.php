@@ -119,6 +119,11 @@
                                 Rp {{ number_format($goals->jumlah_target, 0, ',', '.') }}
                             </p>
                         </div>
+                            <p class="text-lg text-black font-semibold">
+                                Target: {{ \Carbon\Carbon::parse($goals->tgl_target)->format('d-m-Y') }}
+                        <div>
+
+                        </div>
                     </div>
 
                     {{-- Kanan: Tombol aksi --}}
@@ -139,7 +144,7 @@
 
                         {{-- Tombol Edit --}}
                         <a href="{{ route('goals.edit', $goals->id) }}"
-                            class="bg-green-300 hover:bg-green-600 text-white p-1 rounded-md font-poppins flex items-center justify-center">
+                            class="bg-green-300 hover:bg-green-600 text-white p-1 rounded-md font-poppins flex items-center justify-center cursor-pointer">
                             <i class='bx bxs-edit text-2xl'></i>
                         </a>
 
@@ -148,7 +153,7 @@
                             @csrf
                             @method('DELETE')
                             <button type="submit" onclick="return confirm('Yakin ingin hapus goal ini?')"
-                                class="bg-red-400 hover:bg-red-600 text-white p-1 rounded-md font-poppins flex items-center justify-center">
+                                class="bg-red-400 hover:bg-red-600 text-white p-1 rounded-md font-poppins flex items-center justify-center cursor-pointer">
                                 <i class='bx bx-trash text-2xl'></i>
                             </button>
                         </form>

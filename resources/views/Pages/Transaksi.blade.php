@@ -107,7 +107,7 @@
                                                 @method('DELETE')
                                                 <button type="submit"
                                                     onclick="return confirm('Yakin ingin hapus goal ini?')"
-                                                    class="bg-red-400 hover:bg-red-600 text-white p-1 rounded-md font-poppins flex items-center justify-center">
+                                                    class="bg-red-400 hover:bg-red-600 text-white p-1 rounded-md font-poppins flex items-center justify-center cursor-pointer">
                                                     <i class='bx bx-trash text-2xl'></i>
                                                 </button>
                                             </form>

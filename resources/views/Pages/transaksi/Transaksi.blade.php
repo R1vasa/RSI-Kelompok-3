@@ -101,16 +101,16 @@
                                                 <i class='bx bxs-edit text-2xl'></i>
                                             </a>
 
-                                            <form action="{{ route('transaksi.destroy', $transaksi->id) }}" method="POST"
-                                                onsubmit="return confirm('Yakin ingin menghapus?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    onclick="return confirm('Yakin ingin hapus goal ini?')"
-                                                    class="bg-red-400 hover:bg-red-600 text-white p-1 rounded-md font-poppins flex items-center justify-center cursor-pointer">
-                                                    <i class='bx bx-trash text-2xl'></i>
-                                                </button>
-                                            </form>
+                                        <form action="{{ route('transaksi.destroy', $transaksi->id) }}" method="POST" class="inline delete-form">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button"
+                                                data-id="{{ $transaksi->id }}"
+                                                class="bg-red-400 hover:bg-red-600 text-white p-1 rounded-md font-poppins flex items-center justify-center cursor-pointer delete-btn">
+                                                <i class='bx bx-trash text-2xl'></i>
+                                            </button>
+                                        </form>
+
                                         </div>
                                     </td>
                             @endforeach
@@ -118,4 +118,59 @@
                     </table>
 
                 </div>
-            @endsection
+
+                <!-- Modal Konfirmasi Hapus -->
+                <div id="confirmModal"
+                    class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center z-50 transition-opacity duration-300">
+                    <div class="bg-white rounded-xl shadow-lg p-6 w-96 text-center">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-2">Konfirmasi Hapus</h2>
+                        <p class="text-gray-600 mb-6">Apakah kamu yakin ingin menghapus transaksi ini?</p>
+                        <div class="flex justify-center gap-4">
+                            <button id="cancelDelete"
+                                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-4 py-2 rounded-lg">
+                                Tidak
+                            </button>
+                            <button id="confirmDelete"
+                                class="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg">
+                                Ya, Hapus
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const modal = document.getElementById('confirmModal');
+                const cancelBtn = document.getElementById('cancelDelete');
+                const confirmBtn = document.getElementById('confirmDelete');
+                let formToSubmit = null;
+
+                // Saat tombol hapus diklik
+                document.querySelectorAll('.delete-btn').forEach(button => {
+                    button.addEventListener('click', () => {
+                        formToSubmit = button.closest('form'); // ambil form terkait
+                        modal.classList.remove('hidden'); // tampilkan modal
+                    });
+                });
+
+                // Tombol batal
+                cancelBtn.addEventListener('click', () => {
+                    modal.classList.add('hidden');
+                    formToSubmit = null;
+                });
+
+                // Tombol konfirmasi hapus
+                confirmBtn.addEventListener('click', () => {
+                    if (formToSubmit) {
+                        formToSubmit.submit(); // kirim form
+                    }
+                    modal.classList.add('hidden');
+                });
+
+                // Klik di luar modal untuk tutup
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) modal.classList.add('hidden');
+                });
+            });
+            </script>
+        @endsection

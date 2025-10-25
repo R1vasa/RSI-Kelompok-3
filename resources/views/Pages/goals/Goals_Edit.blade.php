@@ -65,4 +65,21 @@
             </div>
         </div>
     </div>
+    <script>
+document.querySelector('input[name="gambar"]').addEventListener('change', function(e) {
+    const [file] = e.target.files;
+    if (file) {
+        const preview = document.createElement('img');
+        preview.src = URL.createObjectURL(file);
+        preview.className = 'w-32 h-32 object-cover rounded-lg border mt-2';
+        
+        // hapus preview lama kalau ada
+        const old = document.querySelector('.preview-image');
+        if (old) old.remove();
+        
+        preview.classList.add('preview-image');
+        e.target.parentNode.insertBefore(preview, e.target.nextSibling);
+    }
+});
+</script>
 @endsection

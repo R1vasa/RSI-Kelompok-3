@@ -21,6 +21,9 @@
                         <label class="block font-medium">Jumlah setor(Rp)</label>
                         <input type="number" name="jumlah_tabungan" class="bg-blue-100 opacity-60 w-full border rounded-full px-3 py-2 "
                         placeholder="contoh: 10000" required>
+                    @error('jumlah_tabungan')
+                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                     </div>
 
                     <div class="flex justify-between mt-6">

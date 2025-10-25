@@ -20,12 +20,12 @@ class GoalsController extends Controller
                 : 'Belum Tercapai';
         }
 
-        return view('pages.goals', compact('goals'));
+        return view('pages/goals/goals', compact('goals'));
     }
 
     public function create()
     {
-        return view('pages.goals_tambah');
+        return view('pages/goals/goals_tambah');
     }
 
     public function store(Request $request)
@@ -63,7 +63,7 @@ class GoalsController extends Controller
     public function edit($id)
     {
         $goals = Goals::where('id_users', Auth::id())->findOrFail($id);
-        return view('pages.goals_edit', compact('goals'));
+        return view('pages/goals/goals_edit', compact('goals'));
     }
 
     public function update(Request $request, $id)
@@ -114,13 +114,16 @@ class GoalsController extends Controller
     public function setorCreate($id)
     {
         $goals = Goals::findOrFail($id);
-        return view('pages.setor_tambah', compact('goals'));
+        return view('pages/goals/setor_tambah', compact('goals'));
     }
 
     public function setorStore(Request $request, $id)
     {
         $request->validate([
-            'jumlah_tabungan' => 'required|numeric|min:1000',
+            'jumlah_tabungan' => 'required|numeric|min:1',
+        ], [
+            'jumlah_tabungan' => 'Jumlah tabungan harus berupa angka positif',
+            'jumlah_tabungan' => 'Setor Tabungan tidak boleh Rp 0',
         ]);
 
         $goals = Goals::findOrFail($id);

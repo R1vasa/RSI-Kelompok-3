@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('id_forum')->constrained('forum_organisasi')->onDelete('cascade');
             $table->foreignId('id_users')->constrained('users')->onDelete('cascade');
             $table->enum('role', ['bendahara', 'anggota'])->default('anggota');
+            $table->timestamps();
         });
     }
 

@@ -4,12 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
+use App\Models\AnggotaForum;
+use App\Models\KasOrganisasi;
+use App\Models\TransaksiOrganisasi;
+use App\Models\Laporan;
+use Illuminate\Support\Str;
 
 class ForumOrganisasi extends Model
 {
     protected $table = 'forum_organisasi';
     protected $primaryKey = 'id';
-    protected $fillable = ['id_users', 'forum', 'deskripsi', 'link_akses'];
+    protected $fillable = ['id_users', 'forum', 'slug', 'deskripsi', 'gambar_forum', 'link_akses'];
 
     public function pembuat()
     {
@@ -18,7 +23,7 @@ class ForumOrganisasi extends Model
 
     public function anggota()
     {
-        return $this->hasMany(AnggotaForum::class, 'id');
+        return $this->hasMany(AnggotaForum::class, 'id_forum');
     }
 
     public function kas()
@@ -34,5 +39,19 @@ class ForumOrganisasi extends Model
     public function laporan()
     {
         return $this->hasMany(Laporan::class, 'id');
+    }
+
+    protected static function booted()
+    {
+        static::creating(function ($forum) {
+            $forum->slug = Str::slug($forum->forum);
+
+            // Cegah slug duplikat
+            $originalSlug = $forum->slug;
+            $count = 1;
+            while (self::where('slug', $forum->slug)->exists()) {
+                $forum->slug = $originalSlug . '-' . $count++;
+            }
+        });
     }
 }

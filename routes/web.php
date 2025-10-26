@@ -1,11 +1,15 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ForumController;
+use App\Http\Controllers\ForumKasController;
+use App\Http\Controllers\ForumTransController;
 use App\Http\Controllers\OTPController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\GoalsController;
 use App\Http\Middleware\Verification;
+use Illuminate\Routing\RouteGroup;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
@@ -62,4 +66,33 @@ Route::middleware('auth')->group(function () {
     // 🔹 ROUTE setor tabungan
     Route::get('/setor/{id}/tambah', [GoalsController::class, 'setorcreate'])->name('setor.create');
     Route::post('/goals/{id}/setor', [GoalsController::class, 'setorstore'])->name('setor.store');
+
+    // 🔹 ROUTE Forum
+    Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
+    Route::get('/forum/tambah', [ForumController::class, 'indexAdd'])->name('forum.add');
+    Route::post('/forum', [ForumController::class, 'add'])->name('forum.store');
+    Route::post('/forum/join', [ForumController::class, 'joinSubmit'])->name('forum.join.submit');
+});
+
+Route::middleware('auth', 'hakAkses')->group(function () {
+    // ROUTE hanya anggota
+    Route::get('/forum/kas/{slug}', [ForumKasController::class, 'index'])->name('forum.kas');
+    Route::get('/forum/transaksi/{slug}', [ForumTransController::class, 'index'])->name('forum.trans');
+});
+
+Route::middleware('auth', 'hakAkses', 'isBendahara')->group(function () {
+    // ROUTE hanya bendahara
+    Route::get('/forum/kas/{slug}/tambah', [ForumKasController::class, 'indexAdd'])->name('tambah.kas.index');
+    Route::post('/forum/kas/{slug}/tambah', [ForumKasController::class, 'add'])->name('tambah.kas');
+    Route::get('/forum/kas/{slug}/{id}/edit', [ForumKasController::class, 'indexUpdate'])->name('edit.kas.index');
+    Route::put('/forum/kas/{slug}/{id}/edit', [ForumKasController::class, 'update'])->name('edit.kas');
+    Route::delete('/forum/kas/{slug}/{id}', [ForumKasController::class, 'delete'])
+        ->name('kas.destroy');
+
+    Route::get('/forum/transaksi/{slug}/tambah', [ForumTransController::class, 'indexAdd'])->name('tambah.trans.index');
+    Route::post('/forum/transaksi/{slug}/tambah', [ForumTransController::class, 'add'])->name('tambah.trans');
+    Route::get('/forum/transaksi/{slug}/{id}/edit', [ForumTransController::class, 'indexUpdate'])->name('edit.trans.index');
+    Route::put('/forum/transaksi/{slug}/{id}/edit', [ForumTransController::class, 'update'])->name('edit.trans');
+    Route::delete('/forum/transaksi/{slug}/{id}', [ForumTransController::class, 'delete'])
+        ->name('forum.transaksi.destroy');
 });

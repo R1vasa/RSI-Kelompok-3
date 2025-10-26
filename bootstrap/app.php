@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Middleware\hakAkses as MiddlewareHakAkses;
+use App\Http\Middleware\isBendahara;
 use App\Http\Middleware\Verification;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -13,6 +15,12 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias(['verification' => Verification::class]);
+    })
+    ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->alias(['hakAkses' => MiddlewareHakAkses::class]);
+    })
+    ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->alias(['isBendahara' => isBendahara::class]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

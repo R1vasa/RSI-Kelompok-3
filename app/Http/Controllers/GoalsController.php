@@ -20,21 +20,27 @@ class GoalsController extends Controller
                 : 'Belum Tercapai';
         }
 
-        return view('pages.goals', compact('goals'));
+        return view('pages/goals/goals', compact('goals'));
     }
 
     public function create()
     {
-        return view('pages.goals_tambah');
+        return view('pages/goals/goals_tambah');
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'judul_goals' => 'required|string|max:255',
+            'judul_goals' => 'required|string|max:40',
             'jumlah_target' => 'required|numeric|min:1',
-            'tgl_target' => 'required|date',
+            'tgl_target' => 'required|date|after_or_equal:today',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ], [
+             'judul_goals' => 'Judul goals maksimal 40 karakter',
+            'jumlah_target' => 'Jumlah target harus diisi angka positif',
+            'tgl_target' => 'Tanggal target tidak boleh kurang dari tanggal sekarang',
+            'gambar' => 'Gambar harus berupa file gambar (jpg, jpeg, png)',
+            'gambar' => 'Ukuran gambar maksimal 2MB',
         ]);
 
         // Simpan gambar (jika ada)
@@ -57,7 +63,7 @@ class GoalsController extends Controller
     public function edit($id)
     {
         $goals = Goals::where('id_users', Auth::id())->findOrFail($id);
-        return view('pages.goals_edit', compact('goals'));
+        return view('pages/goals/goals_edit', compact('goals'));
     }
 
     public function update(Request $request, $id)
@@ -65,10 +71,16 @@ class GoalsController extends Controller
         $goal = Goals::where('id_users', Auth::id())->findOrFail($id);
 
         $validated = $request->validate([
-            'judul_goals' => 'required|string|max:255',
+            'judul_goals' => 'required|string|max:40',
             'jumlah_target' => 'required|numeric|min:1',
-            'tgl_target' => 'required|date',
+            'tgl_target' => 'required|date|after_or_equal:today',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ], [
+             'judul_goals' => 'Judul goals maksimal 40 karakter',
+            'jumlah_target' => 'Jumlah target harus diisi angka positif',
+            'tgl_target' => 'Tanggal target tidak boleh kurang dari tanggal sekarang',
+            'gambar' => 'Gambar harus berupa file gambar (jpg, jpeg, png)',
+            'gambar' => 'Ukuran gambar maksimal 2MB',
         ]);
 
         // Simpan gambar baru (hapus lama jika ada)
@@ -102,13 +114,16 @@ class GoalsController extends Controller
     public function setorCreate($id)
     {
         $goals = Goals::findOrFail($id);
-        return view('pages.setor_tambah', compact('goals'));
+        return view('pages/goals/setor_tambah', compact('goals'));
     }
 
     public function setorStore(Request $request, $id)
     {
         $request->validate([
-            'jumlah_tabungan' => 'required|numeric|min:1000',
+            'jumlah_tabungan' => 'required|numeric|min:1',
+        ], [
+            'jumlah_tabungan' => 'Jumlah tabungan harus berupa angka positif',
+            'jumlah_tabungan' => 'Setor Tabungan tidak boleh Rp 0',
         ]);
 
         $goals = Goals::findOrFail($id);

@@ -8,6 +8,7 @@ use App\Models\AnggotaForum;
 use App\Models\KasOrganisasi;
 use App\Models\TransaksiOrganisasi;
 use App\Models\Laporan;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ForumOrganisasi extends Model
@@ -51,6 +52,14 @@ class ForumOrganisasi extends Model
             $count = 1;
             while (self::where('slug', $forum->slug)->exists()) {
                 $forum->slug = $originalSlug . '-' . $count++;
+            }
+        });
+
+        static::deleting(function ($forum) {
+            // Cek apakah gambar bukan default
+            if ($forum->gambar_forum && $forum->gambar_forum !== 'default_forum.png') {
+                // Hapus dari storage/public
+                Storage::disk('public')->delete($forum->gambar_forum);
             }
         });
     }

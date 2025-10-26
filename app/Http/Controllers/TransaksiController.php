@@ -17,13 +17,13 @@ class TransaksiController extends Controller
             ->orderBy('tgl_transaksi', 'desc')
             ->get();
 
-        return view('pages/transaksi', compact('transaksis'));
+        return view('pages/transaksi/transaksi', compact('transaksis'));
     }
 
     public function create()
     {
         // Ambil kategori dari tabel kategori (referensi)
-        return view('pages/transaksi_tambah', [
+        return view('pages/transaksi/transaksi_tambah', [
             'kategoris' => Kategori::all()
         ]);
     }
@@ -31,11 +31,17 @@ class TransaksiController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'judul_transaksi' => 'required|string|max:255',
-            'jumlah_transaksi' => 'required|numeric|min:0',
+            'judul_transaksi' => 'required|string|max:40',
+            'jumlah_transaksi' => 'required|numeric|min:1',
             'jenis_transaksi' => 'required|in:Pemasukan,Pengeluaran',
             'tgl_transaksi' => 'required|date',
             'id_kategori' => 'required|exists:kategori,id'
+        ],
+        [
+            'judul_transaksi' => 'judul transaksi harus diisi',
+            'judul_transaksi' => 'judul transaksi maksimal 40 karakter',
+            'jumlah_transaksi' => 'jumlah transaksi harus diisi angka positif',
+            
         ]);
 
         Transaksi::create([
@@ -54,17 +60,22 @@ class TransaksiController extends Controller
     {
         $transaksi = Transaksi::where('id_users', Auth::id())->findOrFail($id);
         $kategoris = \App\Models\Kategori::all();
-        return view('pages/transaksi_edit', compact('transaksi', 'kategoris'));
+        return view('pages/transaksi/transaksi_edit', compact('transaksi', 'kategoris'));
     }
 
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'judul_transaksi' => 'required|string|max:255',
-            'jumlah_transaksi' => 'required|numeric|min:0',
+            'judul_transaksi' => 'required|string|max:40',
+            'jumlah_transaksi' => 'required|numeric|min:1',
             'jenis_transaksi' => 'required|in:pemasukan,pengeluaran',
             'tgl_transaksi' => 'required|date',
             'id_kategori' => 'required|exists:kategori,id'
+        ],
+            [
+            'judul_transaksi' => 'judul transaksi harus diisi',
+            'judul_transaksi' => 'judul transaksi maksimal 40 karakter',
+            'jumlah_transaksi' => 'jumlah transaksi harus diisi angka positif',
         ]);
 
         $transaksi = Transaksi::where('id_users', Auth::id())->findOrFail($id);

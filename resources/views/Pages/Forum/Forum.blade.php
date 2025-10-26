@@ -104,59 +104,60 @@
                     </form>
                 </div>
             </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // === Modal Join Forum ===
+            const modalJoin = document.getElementById('modal');
+            const openJoinBtn = document.getElementById('openModal');
+            const closeJoinBtn = document.getElementById('closeModalX');
 
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    // === Modal Join Forum ===
-                    const modalJoin = document.getElementById('modal');
-                    const openJoinBtn = document.getElementById('openModal');
-                    const closeJoinBtn = document.getElementById('closeModalX');
+            openJoinBtn.addEventListener('click', () => {
+                modalJoin.classList.remove('hidden');
+                modalJoin.classList.add('flex');
+            });
 
-                    openJoinBtn.addEventListener('click', () => {
-                        modalJoin.classList.remove('hidden');
-                        modalJoin.classList.add('flex');
-                    });
+            closeJoinBtn.addEventListener('click', () => {
+                modalJoin.classList.add('hidden');
+                modalJoin.classList.remove('flex');
+            });
 
-                    closeJoinBtn.addEventListener('click', () => {
-                        modalJoin.classList.add('hidden');
-                        modalJoin.classList.remove('flex');
-                    });
+            modalJoin.addEventListener('click', (e) => {
+                if (e.target === modalJoin) {
+                    modalJoin.classList.add('hidden');
+                    modalJoin.classList.remove('flex');
+                }
+            });
 
-                    modalJoin.addEventListener('click', (e) => {
-                        if (e.target === modalJoin) {
-                            modalJoin.classList.add('hidden');
-                            modalJoin.classList.remove('flex');
-                        }
-                    });
-
-                    // === Modal Link Forum (Loop) ===
-                    document.querySelectorAll('[data-target]').forEach(button => {
-                        button.addEventListener('click', () => {
-                            const targetId = button.getAttribute('data-target');
-                            const modal = document.getElementById(targetId);
-                            modal.classList.remove('hidden');
-                            modal.classList.add('flex');
-                        });
-                    });
-
-                    document.querySelectorAll('#closeModalLinkX').forEach(closeBtn => {
-                        closeBtn.addEventListener('click', (e) => {
-                            const modal = e.target.closest('.fixed');
-                            modal.classList.add('hidden');
-                            modal.classList.remove('flex');
-                        });
-                    });
-
-                    document.querySelectorAll('[id^="modalLink"]').forEach(modal => {
-                        modal.addEventListener('click', (e) => {
-                            if (e.target === modal) {
-                                modal.classList.add('hidden');
-                                modal.classList.remove('flex');
-                            }
-                        });
-                    });
+            // === Modal Link Forum (Loop) ===
+            document.querySelectorAll('[data-target]').forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.getAttribute('data-target');
+                    const modal = document.getElementById(targetId);
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
                 });
-            </script>
+            });
+
+            document.querySelectorAll('#closeModalLinkX').forEach(closeBtn => {
+                closeBtn.addEventListener('click', (e) => {
+                    const modal = e.target.closest('.fixed');
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                });
+            });
+
+            document.querySelectorAll('[id^="modalLink"]').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.classList.add('hidden');
+                        modal.classList.remove('flex');
+                    }
+                });
+            });
+        });
+    </script>
 
 
-        @endsection
+@endsection

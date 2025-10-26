@@ -32,6 +32,6 @@
             </div>
             <form action="{{ route('logout') }}" method="POST" class="flex justify-center items-center mt-auto p-4">
                 @csrf
-                <button type="submit" class="cursor-pointer">logout</button>
+                <button type="submit" class="cursor-pointer bg-blue-400 px-4 py-3 rounded-full">logout</button>
             </form>
         </div>

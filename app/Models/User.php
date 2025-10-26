@@ -65,6 +65,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserOtp::class, 'id');
     }
+
+    public function forumDiikuti()
+    {
+        return $this->belongsToMany(
+            ForumOrganisasi::class,
+            'anggota_forum',
+            'id_users',
+            'id_forum'
+        );
+    }
     /**
      * The attributes that should be hidden for serialization.
      *

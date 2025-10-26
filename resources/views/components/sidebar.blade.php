@@ -24,7 +24,7 @@
                 <div class="space-y-4 pl-2 font-noto font-semibold">
                     <h2 class="text-lg font-bold text-blue-200">Keuangan Organisasi</h2>
                     <nav class="space-y-2 pl-4 text-white">
-                        <a href="#"
+                        <a href="{{ route('forum.index') }}"
                             class="block text-md font-medium hover:text-blue-200 transition duration-150">Forum
                             Organisasi</a>
                     </nav>

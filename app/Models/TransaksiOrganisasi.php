@@ -10,9 +10,8 @@ class TransaksiOrganisasi extends Model
     protected $primaryKey = 'id';
     protected $fillable = [
         'id_forum',
+        'nama',
         'jenis',
-        'sumber',
-        'kategori',
         'nominal',
         'deskripsi',
         'tgl_transaksi'

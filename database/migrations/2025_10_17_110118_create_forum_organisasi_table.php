@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('forum', 100);
             $table->text('deskripsi')->nullable();
             $table->string('link_akses', 150)->unique();
+            $table->string('gambar_forum')->nullable()->default('default_forum.png');
             $table->timestamps();
         });
     }

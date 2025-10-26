@@ -9,7 +9,9 @@
                     <nav class="space-y-3 pl-4 text-white">
                         <a href="{{ route('transaksi.index') }}"
                             class="block text-md font-medium hover:text-blue-200 transition duration-150">Transaksi</a>
-                        <a href="/"
+                        <a href="/grafik" 
+                        class="block text-md font-medium hover:text-blue-200 transition duration-150">Tren Keuangan </a>
+                        <a href="{{ route('anggaran.index') }}"
                             class="block text-md font-medium hover:text-blue-200 transition duration-150">Anggaran</a>
                         <a href="{{ route('goals.index') }}"
                             class="block text-md font-medium hover:text-blue-200 transition duration-150">Target

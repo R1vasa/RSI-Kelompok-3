@@ -1,16 +1,17 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ForumController;
-use App\Http\Controllers\ForumKasController;
-use App\Http\Controllers\ForumTransController;
 use App\Http\Controllers\OTPController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\GoalsController;
 use App\Http\Middleware\Verification;
-use Illuminate\Routing\RouteGroup;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\GrafikController;
+use App\Http\Controllers\ControllerAnggaran;
+use App\Http\Controllers\ForumController;
+use App\Http\Controllers\ForumKasController;
+use App\Http\Controllers\ForumTransController;
 
 Route::get('/', function () {
     return Auth::check() ? view('Pages/Dashboard') : redirect('/login');
@@ -67,7 +68,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/setor/{id}/tambah', [GoalsController::class, 'setorcreate'])->name('setor.create');
     Route::post('/goals/{id}/setor', [GoalsController::class, 'setorstore'])->name('setor.store');
 
-    // 🔹 ROUTE Forum
+    // 🔹 ROUTE grafik
+    Route::get('/grafik', [GrafikController::class, 'index'])->name('grafik.index');
+
+    // 🔹 ROUTE anggaran
+    Route::resource('anggaran', ControllerAnggaran::class);
+
+        // 🔹 ROUTE Forum
     Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
     Route::get('/forum/tambah', [ForumController::class, 'indexAdd'])->name('forum.add');
     Route::post('/forum', [ForumController::class, 'add'])->name('forum.store');

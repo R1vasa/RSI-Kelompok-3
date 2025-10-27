@@ -33,8 +33,8 @@
                     @endif
                 </div>
 
-                <div class="bg-white shadow-md rounded-lg p-6">
-                    <table class="min-w-full table-auto">
+                <div class="px-6 py-2">
+                    <table class="min-w-full table-auto border-1 border-gray-300">
                         <thead>
                             <tr class="bg-blue-200">
                                 <th class="px-4 py-2 text-center">Judul</th>
@@ -48,7 +48,7 @@
                         </thead>
                         <tbody>
                             @foreach ($trans as $Trans)
-                                <tr class="border-b">
+                                <tr>
                                     <td class="px-4 py-2 text-center">{{ $Trans->nama }}</td>
                                     <td class="px-4 py-2 text-center relative group">
                                         {{ Str::limit($Trans->deskripsi, 20) }}

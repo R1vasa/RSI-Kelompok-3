@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('transaksi_organisasi', function (Blueprint $table) {
-            // $table->dropColumn('sumber');
-            // $table->dropColumn('kategori');
-            // $table->string('nama', 100)->after('id_forum');
+            $table->dropColumn('sumber');
+            $table->dropColumn('kategori');
+            $table->string('nama', 100)->after('id_forum');
         });
         Schema::table('kas_organisasi', function (Blueprint $table) {
             $table->dropColumn('jenis_transaksi');

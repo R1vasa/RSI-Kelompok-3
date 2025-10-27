@@ -32,8 +32,8 @@
                         </div>
                     @endif
                 </div>
-                <div class="bg-white shadow-md rounded-lg p-6">
-                    <table class="min-w-full table-auto">
+                <div class="px-6 py-2">
+                    <table class="min-w-full table-auto border-1 border-gray-300">
                         <thead>
                             <tr class="bg-blue-200">
                                 <th class="px-4 py-2 text-center font-poppins">Nama</th>
@@ -41,12 +41,14 @@
                                 <th class="px-4 py-2 text-center font-poppins"></th>
                                 <th class="px-4 py-2 text-center font-poppins">Tanggal</th>
                                 <th class="px-4 py-2 text-center font-poppins">Nominal</th>
-                                <th class="px-4 py-2 text-center font-poppins">Action</th>
+                                @if ($akses->role == 'bendahara')
+                                    <th class="px-4 py-2 text-center font-poppins">Action</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($kas as $Kas)
-                                <tr class="border-b">
+                                <tr>
                                     <td class="px-4 py-2 font-poppins text-center">{{ $Kas->nama_transaksi }}
                                     </td>
                                     <td class="px-4 py-2 font-poppins text-center">

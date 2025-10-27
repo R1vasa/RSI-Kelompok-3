@@ -18,13 +18,24 @@
                 </div>
 
                 <div class="flex items-center gap-5">
-                    <button class="text-gray-500 hover:text-gray-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1010.5 3a7.5 7.5 0 006.15 13.65z" />
-                        </svg>
-                    </button>
+                
+                {{-- 1. Tombol Ikon Search (Trigger) --}}
+                <button id="search-icon-btn" class="text-gray-500 hover:text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1010.5 3a7.5 7.5 0 006.15 13.65z" />
+                    </svg>
+                </button>
+
+                {{-- 2. Input Search (Tersembunyi, tapi terhubung ke 'filterForm') --}}
+                <input type="text" name="search_judul"
+                    id="search-input-field"
+                    form="filterForm"
+                    placeholder="Cari & tekan Enter"
+                    value="{{ request('search_judul') }}"
+                    class="hidden w-48 text-sm outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 border rounded-lg px-3 py-1.5 shadow-sm">
+
 
                     <div class="flex items-center gap-2">
                         <img class="w-8 h-8 rounded-full"
@@ -85,7 +96,8 @@
             {{-- 🔹 FILTER TRANSAKSI --}}
             <div class="p-6">
                 <div class="flex justify-between items-center mb-6">
-                    <form method="GET" action="{{ route('transaksi.index') }}" class="flex items-center gap-3"
+
+                    <form method="GET" action="{{ route('transaksi.index') }}" class="flex items-center gap-2"
                         id="filterForm">
 
                         {{-- Date Range --}}
@@ -126,7 +138,9 @@
 
                         {{-- Reset --}}
                         <a href="{{ route('transaksi.index') }}"
-                            class="flex items-center text-sm text-indigo-600 hover:text-indigo-800 ml-3 font-medium">
+
+                            class="flex items-center text-sm text-indigo-600 hover:text-indigo-800 ml-2 font-medium">
+
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -291,4 +305,40 @@
             });
         });
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchBtn = document.getElementById('search-icon-btn');
+            const searchInput = document.getElementById('search-input-field');
+    
+            // 1. Saat ikon search diklik
+            searchBtn.addEventListener('click', function() {
+                searchBtn.classList.add('hidden'); // Sembunyikan ikon
+                searchInput.classList.remove('hidden'); // Tampilkan input
+                searchInput.focus(); // Langsung fokus ke input
+            });
+    
+            // 2. Saat klik di luar input (blur)
+            searchInput.addEventListener('blur', function() {
+
+                if (searchInput.value === '') {
+                    searchInput.classList.add('hidden'); // Sembunyikan input
+                    searchBtn.classList.remove('hidden'); // Tampilkan lagi ikon
+                }
+            });
+
+            searchInput.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); // Mencegah aksi default 'Enter'
+                    submitFilterForm(); // Memanggil fungsi auto-submit Anda yang sudah ada
+                }
+            });
+    
+            if (searchInput.value !== '') {
+                searchBtn.classList.add('hidden');
+                searchInput.classList.remove('hidden');
+            }
+        });
+    </script>
 @endsection
+

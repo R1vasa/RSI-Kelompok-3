@@ -9,15 +9,59 @@ use Illuminate\Support\Facades\Auth;
 
 class TransaksiController extends Controller
 {
-    public function index()
+    public function index(Request $request) // 1. Tambahkan "Request $request"
     {
-        // Ambil data transaksi + nama kategori dari relasi
-        $transaksis = Transaksi::with('kategori')
-            ->where('id_users', Auth::id())
-            ->orderBy('tgl_transaksi', 'desc')
-            ->get();
+        // 2. Mulai query builder, JANGAN ->get() dulu
+        $query = Transaksi::with('kategori')
+            ->where('id_users', Auth::id());
 
-        return view('pages/transaksi/transaksi', compact('transaksis'));
+        // 3. Terapkan filter JIKA ada input dari form
+        
+        // Filter berdasarkan Jenis Transaksi (pemasukan/pengeluaran)
+        if ($request->filled('jenis_transaksi')) {
+            // $request->jenis_transaksi akan berisi "pemasukan" atau "pengeluaran"
+            $query->where('jenis_transaksi', $request->jenis_transaksi);
+        }
+
+        // Filter berdasarkan Kategori
+        if ($request->filled('kategori_id')) {
+            // $request->kategori_id akan berisi id kategori (cth: 1, 2, 5)
+            // Kolom di DB Anda adalah 'id_kategori' (berdasarkan method store)
+            $query->where('id_kategori', $request->kategori_id);
+        }
+        
+        // Filter berdasarkan Judul Transaksi (Search)
+        if ($request->filled('search_judul')) {
+            $query->where('judul_transaksi', 'like', '%' . $request->search_judul . '%');
+        }
+
+        // Filter berdasarkan Rentang Tanggal (Date Range)
+        if ($request->filled('date_range')) {
+            // $request->date_range akan berisi "YYYY-MM-DD to YYYY-MM-DD"
+            $dates = explode(' to ', $request->date_range);
+            
+            // Pastikan formatnya benar (ada 2 tanggal)
+            if (count($dates) == 2) {
+                $startDate = $dates[0] . ' 00:00:00';
+                $endDate = $dates[1] . ' 23:59:59';
+                
+                // Gunakan whereBetween untuk rentang tanggal
+                $query->whereBetween('tgl_transaksi', [$startDate, $endDate]);
+            }
+        }
+
+        // 4. Ambil semua data Kategori untuk dropdown filter
+        // (Sama seperti di method create() Anda)
+        $kategoris = Kategori::orderBy('id', 'asc')->get();
+
+        // 5. Eksekusi query (setelah semua filter diterapkan)
+        $transaksis = $query->orderBy('tgl_transaksi', 'desc')->get();
+
+        // 6. Kirim KEDUA variabel ke view
+        return view('pages/transaksi/transaksi', [
+            'transaksis' => $transaksis,
+            'kategoris' => $kategoris // Ini penting untuk @foreach di dropdown
+        ]);
     }
 
     public function create()

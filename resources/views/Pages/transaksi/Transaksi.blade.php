@@ -36,6 +36,7 @@
                     value="{{ request('search_judul') }}"
                     class="hidden w-48 text-sm outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 border rounded-lg px-3 py-1.5 shadow-sm">
 
+
                     <div class="flex items-center gap-2">
                         <img class="w-8 h-8 rounded-full"
                             src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->nama) }}&background=e0e7ff&color=4f46e5"
@@ -95,10 +96,9 @@
             {{-- 🔹 FILTER TRANSAKSI --}}
             <div class="p-6">
                 <div class="flex justify-between items-center mb-6">
+
                     <form method="GET" action="{{ route('transaksi.index') }}" class="flex items-center gap-2"
                         id="filterForm">
-
-                        
 
                         {{-- Date Range --}}
                         <div class="flex items-center border bg-white rounded-lg px-3 py-2 text-sm text-gray-600 shadow-sm">
@@ -138,7 +138,9 @@
 
                         {{-- Reset --}}
                         <a href="{{ route('transaksi.index') }}"
+
                             class="flex items-center text-sm text-indigo-600 hover:text-indigo-800 ml-2 font-medium">
+
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -339,3 +341,4 @@
         });
     </script>
 @endsection
+

@@ -75,11 +75,6 @@ class ForumController extends Controller
         return redirect()->route('forum.index')->with('success', 'Forum berhasil ditambahkan!');
     }
 
-    public function joinForm()
-    {
-        return view('pages.forum_join');
-    }
-
     public function joinSubmit(Request $request)
     {
         $validated = $request->validate([

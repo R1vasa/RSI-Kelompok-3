@@ -18,16 +18,16 @@
 
                 <div class="flex items-center mb-6 flex-row-reverse gap-2">
                     <a href="{{ route('forum.add') }}"
-                        class="bg-emerald-400 hover:bg-emerald-500 text-white px-4 py-2 rounded-full font-poppins">Tambah
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-poppins">Tambah
                         Forum</a>
                     <button id="openModal"
-                        class="bg-emerald-400 hover:bg-emerald-500 text-white px-4 py-2 rounded-full font-poppins">Join
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-poppins">Join
                         Forum</button>
                 </div>
                 @foreach ($forums as $forum)
                     <div class="bg-[#F2F9FF] shadow-md rounded-full p-2 flex items-center space-x-4 mb-4">
                         <img src="{{ asset('storage/' . $forum->gambar_forum) }}" alt=""
-                            class="w-22 h-22 rounded-full border-1 border-gray-300 object-cover p-1">
+                            class="w-18 h-18 rounded-full border-1 border-gray-300 object-cover p-1">
                         <div class="flex justify-center items-center gap-10">
                             <div class="grid-rows-2">
                                 <h1 class="font-bold text-xl">{{ $forum->forum }}</h1>
@@ -40,12 +40,12 @@
                                             class='bx bx-link-alt text-xl text-white'></i></button>
                                 @endif
                                 <a href="{{ route('forum.kas', ['slug' => $forum->slug]) }}"
-                                    class="bg-blue-500 hover:bg-blue-600 text-white w-32 text-center px-4 py-2 rounded-full font-semibold text-md transition duration-150">
+                                    class="bg-blue-500 hover:bg-blue-600 text-white w-32 text-center px-4 py-2 rounded-lg font-semibold text-md transition duration-150">
                                     Kas
                                 </a>
 
                                 <a href="{{ route('forum.trans', ['slug' => $forum->slug]) }}"
-                                    class="bg-yellow-400 hover:bg-yellow-500 text-white w-32 text-center px-4 py-2 rounded-full font-semibold text-md transition duration-150">
+                                    class="bg-emerald-400 hover:bg-emerald-500 text-white w-32 text-center px-4 py-2 rounded-lg font-semibold text-md transition duration-150">
                                     Transaksi
                                 </a>
                             </div>

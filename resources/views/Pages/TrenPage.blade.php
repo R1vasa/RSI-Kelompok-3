@@ -6,71 +6,82 @@
 <div class="flex">
     <x-sidebar></x-sidebar>
 
-    <div class="flex-1 ml-[20%] min-h-screen bg-[#F8FAFC] p-6 font-poppins overflow-visible relative">
-        <h1 class="text-3xl font-semibold mb-6">Tren Keuangan</h1>
+    <div class="flex-1 ml-[20%] min-h-screen bg-[#F8FAFC] p-8 font-poppins overflow-visible relative">
+        {{-- Header --}}
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-semibold text-gray-800">Tren Keuangan</h1>
+        </div>
 
-        {{-- Filter bulan dan tahun --}}
-        <form method="GET" action="{{ route('grafik.index') }}" class="flex flex-wrap items-center gap-3 mb-8">
-            <div>
-                <label class="font-medium mr-2">Bulan:</label>
-                <select name="bulan" class="border rounded p-2">
-                    @foreach(range(1,12) as $m)
-                        <option value="{{ $m }}" {{ $m == $bulan ? 'selected' : '' }}>
-                            {{ date('F', mktime(0,0,0,$m,1)) }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-            <div>
-                <label class="font-medium mr-2">Tahun:</label>
-                <select name="tahun" class="border rounded p-2">
-                    @foreach($tahunTersedia as $y)
-                        <option value="{{ $y }}" {{ $y == $tahun ? 'selected' : '' }}>{{ $y }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
-                Pilih Periode
-            </button>
-            <button id="hideChartsBtn" type="button" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
-                Tampilkan Grafik
-            </button>
-            
-        </form>
+        {{-- Filter Periode --}}
+        <div class="bg-white shadow-md rounded-xl p-6 mb-8 border border-gray-100">
+            <form method="GET" action="{{ route('grafik.index') }}" class="flex flex-wrap items-center gap-4">
+                <div class="flex items-center gap-2">
+                    <label class="font-medium text-gray-700">Bulan:</label>
+                    <select name="bulan" class="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                        @foreach(range(1,12) as $m)
+                            <option value="{{ $m }}" {{ $m == $bulan ? 'selected' : '' }}>
+                                {{ date('F', mktime(0,0,0,$m,1)) }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <label class="font-medium text-gray-700">Tahun:</label>
+                    <select name="tahun" class="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                        @foreach($tahunTersedia as $y)
+                            <option value="{{ $y }}" {{ $y == $tahun ? 'selected' : '' }}>{{ $y }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-all shadow-sm">
+                    Pilih Periode
+                </button>
+
+                <button id="hideChartsBtn" type="button" class="bg-blue-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition-all shadow-sm">
+                    Tutup Grafik
+                </button>
+            </form>
+        </div>
 
         {{-- Jika tidak ada data --}}
         @if(!empty($message))
-            <p class="text-center text-gray-500">{{ $message }}</p>
+            <div class="bg-white text-center p-8 rounded-xl shadow-md border border-gray-100">
+                <p class="text-gray-500">{{ $message }}</p>
+            </div>
         @else
-
-            <div id="chartsContainer">
-                    <div class="flex flex-wrap justify-center gap-6">
-                        {{-- Pie Chart Pemasukan --}}
-                        <div class="bg-white shadow-md rounded-lg p-4 flex flex-col items-center w-[320px]">
-                            <h3 class="text-lg font-semibold mb-3 text-center text-green-600">
-                                Pemasukan per Kategori
-                            </h3>
-                            <div class="w-[240px] h-[240px]">
-                                <canvas id="pemasukanChart"></canvas>
-                            </div>
-                        </div>
-
-                        {{-- Pie Chart Pengeluaran --}}
-                        <div class="bg-white shadow-md rounded-lg p-4 flex flex-col items-center w-[320px]">
-                            <h3 class="text-lg font-semibold mb-3 text-center text-red-600">
-                                Pengeluaran per Kategori
-                            </h3>
-                            <div class="w-[240px] h-[240px]">
-                                <canvas id="pengeluaranChart"></canvas>
-                            </div>
+            {{-- Kontainer Grafik --}}
+            <div id="chartsContainer" class="space-y-8">
+                {{-- Grafik Pie --}}
+                <div class="flex flex-wrap justify-center gap-8">
+                    {{-- Pie Pemasukan --}}
+                    <div class="bg-white shadow-md rounded-xl p-6 w-[360px] border border-gray-100 hover:shadow-lg transition">
+                        <h3 class="text-lg font-semibold mb-3 text-center text-blue-600">
+                            Pemasukan per Kategori
+                        </h3>
+                        <div class="w-[280px] h-[280px] mx-auto">
+                            <canvas id="pemasukanChart"></canvas>
                         </div>
                     </div>
 
-                    {{-- Line Chart Perbandingan --}}
-                    <div class="bg-white shadow-md rounded-lg p-6 mt-10">
-                        <h3 class="text-xl font-semibold text-center mb-4 text-blue-700">
-                            Perbandingan Pemasukan dan Pengeluaran Bulan {{ $bulan }}/{{ $tahun }}
+                    {{-- Pie Pengeluaran --}}
+                    <div class="bg-white shadow-md rounded-xl p-6 w-[360px] border border-gray-100 hover:shadow-lg transition">
+                        <h3 class="text-lg font-semibold mb-3 text-center text-blue-600">
+                            Pengeluaran per Kategori
                         </h3>
+                        <div class="w-[280px] h-[280px] mx-auto">
+                            <canvas id="pengeluaranChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Line Chart --}}
+                <div class="bg-white shadow-md rounded-xl p-6 border border-gray-100 hover:shadow-lg transition">
+                    <h3 class="text-xl font-semibold text-center mb-5 text-blue-700">
+                        Perbandingan Pemasukan & Pengeluaran Bulan {{ $bulan }}/{{ $tahun }}
+                    </h3>
+                    <div class="w-full h-[400px]">
                         <canvas id="lineChart"></canvas>
                     </div>
                 </div>
@@ -79,6 +90,7 @@
     </div>
 </div>
 
+{{-- Chart.js --}}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
@@ -95,7 +107,7 @@
 
     const getColors = (length) => colorPalette.slice(0, length);
 
-    // Chart Pemasukan
+    // Pie Chart Pemasukan
     new Chart(document.getElementById('pemasukanChart'), {
         type: 'pie',
         data: {
@@ -110,22 +122,14 @@
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false, // <- penting
+            maintainAspectRatio: false,
             plugins: {
-                title: {
-                    display: true,
-                    text: 'Pemasukan Bulan {{ $bulan }}/{{ $tahun }}',
-                    font: { size: 16 }
-                },
-                legend: {
-                    position: 'bottom',
-                    labels: { color: '#333', font: { size: 12 } }
-                }
+                legend: { position: 'bottom', labels: { color: '#333', font: { size: 12 } } }
             }
         }
     });
 
-    // Chart Pengeluaran
+    // Pie Chart Pengeluaran
     new Chart(document.getElementById('pengeluaranChart'), {
         type: 'pie',
         data: {
@@ -140,25 +144,14 @@
         },
         options: {
             responsive: true,
-            animation: {
-                duration: 1500,
-                easing: 'easeInOutQuart'
-            },
+            maintainAspectRatio: false,
             plugins: {
-                title: {
-                    display: true,
-                    text: 'Pengeluaran Bulan {{ $bulan }}/{{ $tahun }}',
-                    font: { size: 16 }
-                },
-                legend: {
-                    position: 'bottom',
-                    labels: { color: '#333', font: { size: 12 } }
-                }
+                legend: { position: 'bottom', labels: { color: '#333', font: { size: 12 } } }
             }
         }
     });
-    
-    // Grafik Garis Perbandingan
+
+    // Line Chart Perbandingan
     const labelsHarian = @json($labelsHarian);
     const dataPemasukanHarian = @json($dataPemasukanHarian);
     const dataPengeluaranHarian = @json($dataPengeluaranHarian);
@@ -190,25 +183,11 @@
         },
         options: {
             responsive: true,
-            animation: {
-                duration: 1500,
-                easing: 'easeInOutQuart'
-            },
             plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: { font: { size: 12 } }
-                },
-                title: {
-                    display: true,
-                    text: 'Tren Harian Pemasukan & Pengeluaran',
-                    font: { size: 16 }
-                },
+                legend: { position: 'bottom', labels: { font: { size: 12 } } },
                 tooltip: {
                     callbacks: {
-                        label: (context) => {
-                            return context.dataset.label + ': Rp' + context.parsed.y.toLocaleString();
-                        }
+                        label: (context) => context.dataset.label + ': Rp' + context.parsed.y.toLocaleString()
                     }
                 }
             },
@@ -217,27 +196,17 @@
                     beginAtZero: true,
                     ticks: { callback: (v) => 'Rp' + v.toLocaleString() }
                 },
-                x: {
-                    title: { display: true, text: 'Tanggal' },
-                    ticks: {
-                        callback: function(value, index) {
-                            return index % 5 === 0 ? this.getLabelForValue(value) : '';
-                        }
-                    }
-                }
+                x: { title: { display: true, text: 'Tanggal' } }
             }
         }
     });
 
-    // Tombol Tutup Grafik
+    // Tombol Sembunyi/Tampilkan Grafik
     document.getElementById('hideChartsBtn')?.addEventListener('click', (e) => {
         const container = document.getElementById('chartsContainer');
         const isHidden = container.style.display === 'none';
         container.style.display = isHidden ? 'block' : 'none';
         e.target.textContent = isHidden ? 'Tutup Grafik' : 'Tampilkan Grafik';
     });
-
-
 </script>
 @endsection
-

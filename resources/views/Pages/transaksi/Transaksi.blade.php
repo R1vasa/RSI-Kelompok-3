@@ -12,49 +12,84 @@
                 <h1 class="p-4 font-semibold font-poppins text-2xl">Daftar Transaksi</h1>
             </div>
 
-            {{-- Modal sukses --}}
-            @if (session('success'))
-                <div id="success-modal" class="fixed inset-0 flex items-center justify-center z-50">
-                    <div class="bg-white rounded-2xl shadow-lg p-6 w-80 text-center animate-fade-in">
-                        <div class="flex justify-center mb-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-green-500" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                            </svg>
+            @if (session('debug'))
+    <div class="bg-gray-100 border p-2 text-xs mt-2">
+        <pre>{{ print_r(session('debug'), true) }}</pre>
+    </div>
+@endif
+
+            {{-- Modal sukses dan peringatan anggaran--}}
+            @if (session('success') || session('warning'))
+                <div id="modal-wrapper" class="fixed inset-0 flex items-center justify-center z-50 space-x-4">
+                    @if (session('success'))
+                        <div id="success-modal" class="bg-white rounded-2xl shadow-lg p-6 w-80 text-center animate-fade-in">
+                            <div class="flex justify-center mb-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-green-500" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <h2 class="text-lg font-semibold text-gray-800">Berhasil!</h2>
+                            <p class="text-gray-600 mt-1">{{ session('success') }}</p>
                         </div>
-                        <h2 class="text-lg font-semibold text-gray-800">Berhasil!</h2>
-                        <p class="text-gray-600 mt-1">{{ session('success') }}</p>
-                    </div>
+                    @endif
+
+                    @if (session('warning'))
+                        <div id="warning-modal" class="bg-white rounded-2xl shadow-lg p-6 w-80 text-center animate-fade-in border-2 border-yellow-400 hidden">
+                            <div class="flex justify-center mb-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-yellow-500" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 8v4m0 4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
+                                </svg>
+                            </div>
+                            <h2 class="text-lg font-semibold text-gray-800">Peringatan!</h2>
+                            <p class="text-gray-600 mt-1">{{ session('warning') }}</p>
+                        </div>
+                    @endif
                 </div>
-
-                <script>
-                    setTimeout(() => {
-                        const modal = document.getElementById('success-modal');
-                        if (modal) {
-                            modal.classList.add('opacity-0', 'transition', 'duration-700');
-                            setTimeout(() => modal.remove(), 700);
-                        }
-                    }, 3000);
-                </script>
-
-                <style>
-                    @keyframes fadeIn {
-                        from {
-                            opacity: 0;
-                            transform: scale(0.9);
-                        }
-
-                        to {
-                            opacity: 1;
-                            transform: scale(1);
-                        }
-                    }
-
-                    .animate-fade-in {
-                        animation: fadeIn 0.4s ease-out;
-                    }
-                </style>
             @endif
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const successModal = document.getElementById('success-modal');
+                    const warningModal = document.getElementById('warning-modal');
+                    const wrapper = document.getElementById('modal-wrapper');
+                    const duration = 2500;
+
+                    if (successModal && warningModal) {
+                        // tampilkan success dulu
+                        setTimeout(() => {
+                            successModal.classList.add('opacity-0', 'transition', 'duration-500');
+                            setTimeout(() => {
+                                successModal.remove();
+                                warningModal.classList.remove('hidden');
+                                setTimeout(() => {
+                                    warningModal.classList.add('opacity-0', 'transition', 'duration-500');
+                                    setTimeout(() => wrapper.remove(), 500);
+                                }, duration);
+                            }, 500);
+                        }, duration);
+                    } else if (successModal || warningModal) {
+                        const modal = successModal || warningModal;
+                        setTimeout(() => {
+                            modal.classList.add('opacity-0', 'transition', 'duration-500');
+                            setTimeout(() => wrapper.remove(), 500);
+                        }, duration);
+                    }
+                });
+            </script>
+
+            <style>
+            @keyframes fade-in {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+            }
+            .animate-fade-in {
+            animation: fade-in 0.4s ease-out;
+            }
+            </style>
 
             {{-- Konten Utama --}}
             <div class="p-6">

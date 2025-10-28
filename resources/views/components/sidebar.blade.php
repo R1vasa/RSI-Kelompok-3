@@ -56,9 +56,10 @@
             </nav>
         </div>
     </div>
-    <form action="{{ route('logout') }}" method="POST" class="flex justify-start items-center mt-auto p-8">
+    <form id="logoutForm" action="{{ route('logout') }}" method="POST"
+        class="flex justify-start items-center mt-auto p-8">
         @csrf
-        <button type="submit"
+        <button id="logoutBtn" type="button"
             class="flex items-center gap-2 text-md font-medium text-white hover:text-blue-200 transition duration-150 cursor-pointer">
             <img width="20" height="20" src="https://img.icons8.com/fluency-systems-filled/24/FFFFFF/exit.png"
                 alt="exit" />
@@ -66,3 +67,47 @@
         </button>
     </form>
 </div>
+
+<!-- Modal Konfirmasi Logout -->
+<div id="logoutModal" class="fixed inset-0 bg-black/40 hidden flex items-center justify-center z-50">
+    <div class="bg-white rounded-xl shadow-lg p-6 w-96 text-center">
+        <h2 class="text-xl font-semibold text-gray-800 mb-2">Konfirmasi Logout</h2>
+        <p class="text-gray-600 mb-6">Apakah kamu yakin ingin keluar dari akun ini?</p>
+        <div class="flex justify-center gap-4">
+            <button id="cancelLogout"
+                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-4 py-2 rounded-lg">Batal</button>
+            <button id="confirmLogout"
+                class="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg">Ya, Logout</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const logoutBtn = document.getElementById('logoutBtn');
+    const logoutModal = document.getElementById('logoutModal');
+    const cancelLogout = document.getElementById('cancelLogout');
+    const confirmLogout = document.getElementById('confirmLogout');
+    const logoutForm = document.getElementById('logoutForm');
+
+    // Saat tombol logout diklik, tampilkan modal
+    logoutBtn.addEventListener('click', () => {
+        logoutModal.classList.remove('hidden');
+    });
+
+    // Tutup modal jika batal
+    cancelLogout.addEventListener('click', () => {
+        logoutModal.classList.add('hidden');
+    });
+
+    // Jika konfirmasi logout, submit form
+    confirmLogout.addEventListener('click', () => {
+        logoutForm.submit();
+    });
+
+    // Tutup modal jika klik di luar box
+    window.addEventListener('click', (e) => {
+        if (e.target === logoutModal) {
+            logoutModal.classList.add('hidden');
+        }
+    });
+</script>

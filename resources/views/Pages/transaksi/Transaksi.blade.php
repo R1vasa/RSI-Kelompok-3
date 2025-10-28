@@ -18,23 +18,20 @@
                 </div>
 
                 <div class="flex items-center gap-5">
-                
-                {{-- 1. Tombol Ikon Search (Trigger) --}}
-                <button id="search-icon-btn" class="text-gray-500 hover:text-gray-700">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1010.5 3a7.5 7.5 0 006.15 13.65z" />
-                    </svg>
-                </button>
 
-                {{-- 2. Input Search (Tersembunyi, tapi terhubung ke 'filterForm') --}}
-                <input type="text" name="search_judul"
-                    id="search-input-field"
-                    form="filterForm"
-                    placeholder="Cari & tekan Enter"
-                    value="{{ request('search_judul') }}"
-                    class="hidden w-48 text-sm outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 border rounded-lg px-3 py-1.5 shadow-sm">
+                    {{-- 1. Tombol Ikon Search (Trigger) --}}
+                    <button id="search-icon-btn" class="text-gray-500 hover:text-gray-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1010.5 3a7.5 7.5 0 006.15 13.65z" />
+                        </svg>
+                    </button>
+
+                    {{-- 2. Input Search (Tersembunyi, tapi terhubung ke 'filterForm') --}}
+                    <input type="text" name="search_judul" id="search-input-field" form="filterForm"
+                        placeholder="Cari & tekan Enter" value="{{ request('search_judul') }}"
+                        class="hidden w-48 text-sm outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 border rounded-lg px-3 py-1.5 shadow-sm">
 
 
                     <div class="flex items-center gap-2">
@@ -167,7 +164,6 @@
 
                         {{-- Reset --}}
                         <a href="{{ route('transaksi.index') }}"
-
                             class="flex items-center text-sm text-indigo-600 hover:text-indigo-800 ml-2 font-medium">
 
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24"
@@ -181,18 +177,19 @@
 
                     {{-- Tombol Ekspor dan Tambah --}}
                     <div class="flex items-center gap-3">
-                        <button
-                            class="bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 px-4 py-2 rounded-lg font-poppins text-sm flex items-center gap-2 shadow-sm">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                            </svg>
-                            Export
-                        </button>
+                        <form action="{{ route('laporan.export.pdf') }}" method="GET">
+                            <input type="hidden" name="date_range" value="{{ request('date_range') }}">
+                            <input type="hidden" name="jenis_transaksi" value="{{ request('jenis_transaksi') }}">
+                            <input type="hidden" name="kategori_id" value="{{ request('kategori_id') }}">
+                            <button type="submit"
+                                class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 flex items-center">
+                                <i class='bx bx-file mr-2'></i> Ekspor PDF
+                            </button>
+                        </form>
                         <a href="{{ route('transaksi.create') }}"
                             class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-poppins text-sm flex items-center gap-2 shadow-sm">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor"
+                                viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
                                     d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
                                     clip-rule="evenodd" />
@@ -339,14 +336,14 @@
         document.addEventListener('DOMContentLoaded', function() {
             const searchBtn = document.getElementById('search-icon-btn');
             const searchInput = document.getElementById('search-input-field');
-    
+
             // 1. Saat ikon search diklik
             searchBtn.addEventListener('click', function() {
                 searchBtn.classList.add('hidden'); // Sembunyikan ikon
                 searchInput.classList.remove('hidden'); // Tampilkan input
                 searchInput.focus(); // Langsung fokus ke input
             });
-    
+
             // 2. Saat klik di luar input (blur)
             searchInput.addEventListener('blur', function() {
 
@@ -362,7 +359,7 @@
                     submitFilterForm(); // Memanggil fungsi auto-submit Anda yang sudah ada
                 }
             });
-    
+
             if (searchInput.value !== '') {
                 searchBtn.classList.add('hidden');
                 searchInput.classList.remove('hidden');
@@ -370,4 +367,3 @@
         });
     </script>
 @endsection
-

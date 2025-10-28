@@ -13,6 +13,7 @@
             </div>
 
             <div class="p-6">
+                {{-- Header Forum --}}
                 <div class="flex gap-4">
                     <img src="{{ asset('storage/' . $forums->gambar_forum) }}"
                         class="h-30 w-30 object-cover rounded-full border-2 border-gray-300 p-1 mb-4" alt="">
@@ -22,21 +23,61 @@
                     </div>
                 </div>
 
-                <div class="flex justify-between p-2">
-                    <h1 class="text-sm font-semibold">Periode 1 - 30 November 2023</h1>
+                {{-- Filter dan Aksi --}}
+                <div class="flex justify-between items-center p-2">
+                    <form method="GET" action="{{ route('forum.trans', $forums->slug) }}" id="filterForm"
+                        class="flex items-center gap-2">
+                        <div
+                            class="flex items-center border bg-white rounded-lg px-3 py-2 text-sm text-gray-600 shadow-sm cursor-pointer">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <input id="datepicker" type="text" placeholder="Pilih periode"
+                                class="outline-none border-none p-0 w-48 text-sm"
+                                value="{{ $periodeAwal && $periodeAkhir ? \Carbon\Carbon::parse($periodeAwal)->format('d M Y') . ' - ' . \Carbon\Carbon::parse($periodeAkhir)->format('d M Y') : '' }}">
+                            <input type="hidden" name="date_range" id="date_range_hidden"
+                                value="{{ $periodeAwal && $periodeAkhir ? $periodeAwal . ' to ' . $periodeAkhir : '' }}">
+                        </div>
+                    </form>
+
+                    {{-- Tombol Aksi Bendahara --}}
                     @if ($akses->role == 'bendahara')
-                        <div>
+                        <div class="flex gap-2">
                             <a href="{{ route('tambah.trans.index', ['slug' => $forums->slug]) }}"
-                                class="px-5 py-2 bg-emerald-500 text-white rounded-xs">Tambah transaksi</a>
-                            <a href="#" class="px-5 py-2 bg-yellow-500 text-white rounded-xs">Ekspor</a>
+                                class="px-5 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition">
+                                Tambah transaksi
+                            </a>
+
+                            <form action="{{ route('forum.laporan.export', ['slug' => $forums->slug]) }}" method="GET">
+                                <input type="hidden" name="periode" value="{{ request('date_range') }}">
+                                <button type="submit"
+                                    class="flex items-center gap-2 px-5 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600">
+                                    <i class='bx bx-export text-lg'></i>
+                                    <span>Ekspor PDF</span>
+                                </button>
+                            </form>
+
                         </div>
                     @endif
                 </div>
 
+                {{-- Informasi Periode --}}
+                <div class="px-4 mb-4 text-sm text-gray-700 font-medium">
+                    @if ($periodeAwal && $periodeAkhir)
+                        Periode: {{ \Carbon\Carbon::parse($periodeAwal)->translatedFormat('d M Y') }} –
+                        {{ \Carbon\Carbon::parse($periodeAkhir)->translatedFormat('d M Y') }}
+                    @else
+                        Menampilkan semua transaksi
+                    @endif
+                </div>
+
+                {{-- Tabel Transaksi --}}
                 <div class="px-6 py-2">
-                    <table class="min-w-full table-auto border-1 border-gray-300">
+                    <table class="min-w-full table-auto border border-gray-300 rounded-lg overflow-hidden shadow-sm">
                         <thead>
-                            <tr class="bg-blue-200">
+                            <tr class="bg-blue-200 text-gray-800 text-sm uppercase">
                                 <th class="px-4 py-2 text-center">Judul</th>
                                 <th class="px-4 py-2 text-center">Deskripsi</th>
                                 <th class="px-4 py-2 text-center">Tanggal</th>
@@ -47,28 +88,30 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($trans as $Trans)
-                                <tr>
-                                    <td class="px-4 py-2 text-center">{{ $Trans->nama }}</td>
-                                    <td class="px-4 py-2 text-center relative group">
-                                        {{ Str::limit($Trans->deskripsi, 20) }}
+                            @forelse ($trans as $Trans)
+                                <tr class="hover:bg-blue-50 transition">
+                                    <td class="px-4 py-2 text-center font-semibold">{{ $Trans->nama }}</td>
+                                    <td class="px-4 py-2 text-center relative group text-gray-700">
+                                        {{ Str::limit($Trans->deskripsi, 25) }}
                                         <span
                                             class="absolute left-1/2 -translate-x-1/2 -top-8 bg-gray-800 text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
                                             {{ $Trans->deskripsi }}
                                         </span>
                                     </td>
-                                    <td class="px-4 py-2 text-center">
-                                        {{ \Carbon\Carbon::parse($Trans->tgl_transaksi)->format('d-m-Y') }}
+                                    <td class="px-4 py-2 text-center text-gray-600">
+                                        {{ \Carbon\Carbon::parse($Trans->tgl_transaksi)->format('d M Y') }}
                                     </td>
+
                                     @if ($Trans->jenis == 'pemasukan')
-                                        <td class="px-4 py-2 text-center text-green-500">
+                                        <td class="px-4 py-2 text-center text-green-600 font-semibold">
                                             + Rp {{ number_format($Trans->nominal, 0, ',', '.') }}
                                         </td>
                                     @else
-                                        <td class="px-4 py-2 text-center text-red-500">
+                                        <td class="px-4 py-2 text-center text-red-600 font-semibold">
                                             - Rp {{ number_format($Trans->nominal, 0, ',', '.') }}
                                         </td>
                                     @endif
+
                                     @if ($akses->role == 'bendahara')
                                         <td class="text-center">
                                             <div class="flex justify-center items-center gap-3">
@@ -76,7 +119,6 @@
                                                     class="bg-green-400 hover:bg-green-600 text-white p-1 rounded-md">
                                                     <i class='bx bxs-edit text-2xl'></i>
                                                 </a>
-
                                                 <form
                                                     action="{{ route('forum.transaksi.destroy', ['slug' => $forums->slug, 'id' => $Trans->id]) }}"
                                                     method="POST" class="inline delete-form">
@@ -91,12 +133,19 @@
                                         </td>
                                     @endif
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="{{ $akses->role == 'bendahara' ? 5 : 4 }}"
+                                        class="text-center py-4 text-gray-500 italic">
+                                        Tidak ada transaksi pada periode ini
+                                    </td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
 
-                {{-- Ringkasan saldo --}}
+                {{-- Ringkasan Saldo --}}
                 <div class="mt-6 bg-white shadow-md rounded-lg p-4 w-1/2 mx-auto">
                     <table class="w-full text-sm">
                         <tr>
@@ -123,7 +172,7 @@
         </div>
     </div>
 
-    {{-- 🔔 Modal konfirmasi hapus (satu saja, di luar foreach) --}}
+    {{-- 🔔 Modal konfirmasi hapus --}}
     <div id="confirmModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-white rounded-xl shadow-lg p-6 w-96 text-center">
             <h2 class="text-xl font-semibold text-gray-800 mb-2">Konfirmasi Hapus</h2>
@@ -141,6 +190,8 @@
         </div>
     </div>
 
+    {{-- Script Konfirmasi Hapus dan Filter Periode --}}
+    <script src="https://cdn.jsdelivr.net/npm/litepicker/dist/litepicker.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const modal = document.getElementById('confirmModal');
@@ -148,7 +199,6 @@
             const confirmBtn = document.getElementById('confirmDelete');
             let formToSubmit = null;
 
-            // Buka modal
             document.querySelectorAll('.delete-btn').forEach(button => {
                 button.addEventListener('click', () => {
                     formToSubmit = button.closest('form');
@@ -156,21 +206,41 @@
                 });
             });
 
-            // Batal hapus
             cancelBtn.addEventListener('click', () => {
                 modal.classList.add('hidden');
                 formToSubmit = null;
             });
 
-            // Konfirmasi hapus
             confirmBtn.addEventListener('click', () => {
                 if (formToSubmit) formToSubmit.submit();
                 modal.classList.add('hidden');
             });
 
-            // Tutup modal saat klik luar area
             modal.addEventListener('click', e => {
                 if (e.target === modal) modal.classList.add('hidden');
+            });
+
+            // 📅 Filter Periode
+            const picker = new Litepicker({
+                element: document.getElementById('datepicker'),
+                singleMode: false,
+                autoApply: true,
+                format: 'DD MMM YYYY',
+                separator: ' - ',
+                dropdowns: {
+                    months: true,
+                    years: true
+                },
+                setup: (picker) => {
+                    picker.on('selected', (date1, date2) => {
+                        const hidden = document.getElementById('date_range_hidden');
+                        if (date1 && date2) {
+                            hidden.value = date1.format('YYYY-MM-DD') + ' to ' + date2.format(
+                                'YYYY-MM-DD');
+                            document.getElementById('filterForm').submit();
+                        }
+                    });
+                },
             });
         });
     </script>

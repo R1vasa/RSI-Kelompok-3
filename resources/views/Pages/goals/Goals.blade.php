@@ -66,7 +66,7 @@
             {{-- Header + Tombol Tambah --}}
             <div class="flex justify-between items-center my-6 px-6">
                 <a href="{{ route('goals.create') }}"
-                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full font-poppins">
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-poppins">
                     + Tambah Goals
                 </a>
             </div>
@@ -119,8 +119,8 @@
                                 Rp {{ number_format($goals->jumlah_target, 0, ',', '.') }}
                             </p>
                         </div>
-                            <p class="text-lg text-black font-semibold">
-                                Target: {{ \Carbon\Carbon::parse($goals->tgl_target)->format('d-m-Y') }}
+                        <p class="text-lg text-black font-semibold">
+                            Target: {{ \Carbon\Carbon::parse($goals->tgl_target)->format('d-m-Y') }}
                         <div>
 
                         </div>
@@ -152,8 +152,7 @@
                         <form action="{{ route('goals.destroy', $goals->id) }}" method="POST" class="inline delete-form">
                             @csrf
                             @method('DELETE')
-                            <button type="button"
-                            data-id="{{ $goals->id }}"
+                            <button type="button" data-id="{{ $goals->id }}"
                                 class="bg-red-400 hover:bg-red-600 text-white p-1 rounded-md font-poppins flex items-center justify-center cursor-pointer delete-btn">
                                 <i class='bx bx-trash text-2xl'></i>
                             </button>
@@ -163,77 +162,77 @@
             @endforeach
         </div>
     </div>
-</div>
+    </div>
     <div id="confirmModal"
-                    class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center z-50 transition-opacity duration-300">
-                    <div class="bg-white rounded-xl shadow-lg p-6 w-96 text-center">
-                        <h2 class="text-xl font-semibold text-gray-800 mb-2">Konfirmasi Hapus</h2>
-                        <p class="text-gray-600 mb-6">Apakah kamu yakin ingin menghapus goals ini?</p>
-                        <div class="flex justify-center gap-4">
-                            <button id="cancelDelete"
-                                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-4 py-2 rounded-lg">
-                                Tidak
-                            </button>
-                            <button id="confirmDelete"
-                                class="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg">
-                                Ya, Hapus
-                            </button>
-                        </div>
-                    </div>
-                </div>
+        class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center z-50 transition-opacity duration-300">
+        <div class="bg-white rounded-xl shadow-lg p-6 w-96 text-center">
+            <h2 class="text-xl font-semibold text-gray-800 mb-2">Konfirmasi Hapus</h2>
+            <p class="text-gray-600 mb-6">Apakah kamu yakin ingin menghapus goals ini?</p>
+            <div class="flex justify-center gap-4">
+                <button id="cancelDelete"
+                    class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-4 py-2 rounded-lg">
+                    Tidak
+                </button>
+                <button id="confirmDelete"
+                    class="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg">
+                    Ya, Hapus
+                </button>
+            </div>
+        </div>
+    </div>
 
-              <!-- Modal Konfirmasi Hapus -->
-                <div id="confirmModal"
-                    class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center z-50 transition-opacity duration-300">
-                    <div class="bg-white rounded-xl shadow-lg p-6 w-96 text-center">
-                        <h2 class="text-xl font-semibold text-gray-800 mb-2">Konfirmasi Hapus</h2>
-                        <p class="text-gray-600 mb-6">Apakah kamu yakin ingin menghapus transaksi ini?</p>
-                        <div class="flex justify-center gap-4">
-                            <button id="cancelDelete"
-                                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-4 py-2 rounded-lg">
-                                Tidak
-                            </button>
-                            <button id="confirmDelete"
-                                class="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg">
-                                Ya, Hapus
-                            </button>
-                        </div>
-                    </div>
-                </div>
+    <!-- Modal Konfirmasi Hapus -->
+    <div id="confirmModal"
+        class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center z-50 transition-opacity duration-300">
+        <div class="bg-white rounded-xl shadow-lg p-6 w-96 text-center">
+            <h2 class="text-xl font-semibold text-gray-800 mb-2">Konfirmasi Hapus</h2>
+            <p class="text-gray-600 mb-6">Apakah kamu yakin ingin menghapus transaksi ini?</p>
+            <div class="flex justify-center gap-4">
+                <button id="cancelDelete"
+                    class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-4 py-2 rounded-lg">
+                    Tidak
+                </button>
+                <button id="confirmDelete"
+                    class="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg">
+                    Ya, Hapus
+                </button>
+            </div>
+        </div>
+    </div>
 
-            <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const modal = document.getElementById('confirmModal');
-                const cancelBtn = document.getElementById('cancelDelete');
-                const confirmBtn = document.getElementById('confirmDelete');
-                let formToSubmit = null;
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('confirmModal');
+            const cancelBtn = document.getElementById('cancelDelete');
+            const confirmBtn = document.getElementById('confirmDelete');
+            let formToSubmit = null;
 
-                // Saat tombol hapus diklik
-                document.querySelectorAll('.delete-btn').forEach(button => {
-                    button.addEventListener('click', () => {
-                        formToSubmit = button.closest('form'); // ambil form terkait
-                        modal.classList.remove('hidden'); // tampilkan modal
-                    });
-                });
-
-                // Tombol batal
-                cancelBtn.addEventListener('click', () => {
-                    modal.classList.add('hidden');
-                    formToSubmit = null;
-                });
-
-                // Tombol konfirmasi hapus
-                confirmBtn.addEventListener('click', () => {
-                    if (formToSubmit) {
-                        formToSubmit.submit(); // kirim form
-                    }
-                    modal.classList.add('hidden');
-                });
-
-                // Klik di luar modal untuk tutup
-                modal.addEventListener('click', (e) => {
-                    if (e.target === modal) modal.classList.add('hidden');
+            // Saat tombol hapus diklik
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    formToSubmit = button.closest('form'); // ambil form terkait
+                    modal.classList.remove('hidden'); // tampilkan modal
                 });
             });
-            </script>
-        @endsection
+
+            // Tombol batal
+            cancelBtn.addEventListener('click', () => {
+                modal.classList.add('hidden');
+                formToSubmit = null;
+            });
+
+            // Tombol konfirmasi hapus
+            confirmBtn.addEventListener('click', () => {
+                if (formToSubmit) {
+                    formToSubmit.submit(); // kirim form
+                }
+                modal.classList.add('hidden');
+            });
+
+            // Klik di luar modal untuk tutup
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) modal.classList.add('hidden');
+            });
+        });
+    </script>
+@endsection

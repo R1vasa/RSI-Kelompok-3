@@ -49,12 +49,6 @@
                 </div>
             </div>
 
-            @if (session('debug'))
-    <div class="bg-gray-100 border p-2 text-xs mt-2">
-        <pre>{{ print_r(session('debug'), true) }}</pre>
-    </div>
-@endif
-
             {{-- Modal sukses dan peringatan anggaran--}}
             @if (session('success') || session('warning'))
                 <div id="modal-wrapper" class="fixed inset-0 flex items-center justify-center z-50 space-x-4">

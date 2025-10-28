@@ -7,17 +7,17 @@
     <x-sidebar></x-sidebar>
 
     <div class="flex-1 ml-[20%] min-h-screen bg-[#F8FAFC] p-8 font-poppins overflow-visible relative">
-        {{-- Header --}}
         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-3xl font-semibold text-gray-800">Tren Keuangan</h1>
+            <h1 class="text-3xl font-semibold text-gray-800">📈 Tren Keuangan</h1>
         </div>
 
-        {{-- Filter Periode --}}
         <div class="bg-white shadow-md rounded-xl p-6 mb-8 border border-gray-100">
             <form method="GET" action="{{ route('grafik.index') }}" class="flex flex-wrap items-center gap-4">
-                <div class="flex items-center gap-2">
-                    <label class="font-medium text-gray-700">Bulan:</label>
-                    <select name="bulan" class="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                {{-- Bulan --}}
+                <div class="flex flex-col">
+                    <label class="text-sm font-medium text-gray-700 mb-1">Bulan</label>
+                    <select name="bulan"
+                        class="border border-gray-300 rounded-xl px-6 py-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-700 bg-white">
                         @foreach(range(1,12) as $m)
                             <option value="{{ $m }}" {{ $m == $bulan ? 'selected' : '' }}>
                                 {{ date('F', mktime(0,0,0,$m,1)) }}
@@ -26,39 +26,42 @@
                     </select>
                 </div>
 
-                <div class="flex items-center gap-2">
-                    <label class="font-medium text-gray-700">Tahun:</label>
-                    <select name="tahun" class="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                <div class="flex flex-col">
+                    <label class="text-sm font-medium text-gray-700 mb-1">Tahun</label>
+                    <select name="tahun"
+                        class="border border-gray-300 rounded-xl px-6 py-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-700 bg-white">
                         @foreach($tahunTersedia as $y)
                             <option value="{{ $y }}" {{ $y == $tahun ? 'selected' : '' }}>{{ $y }}</option>
                         @endforeach
                     </select>
                 </div>
 
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-all shadow-sm">
-                    Pilih Periode
-                </button>
+                <div class="flex items-end gap-3 mt-2">
+                    <button type="submit"
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl shadow-sm transition-all text-sm font-medium">
+                        <i class="fa-solid fa-filter mr-1"></i> Terapkan
+                    </button>
 
-                <button id="hideChartsBtn" type="button" class="bg-blue-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition-all shadow-sm">
-                    Tutup Grafik
-                </button>
+                    <button id="hideChartsBtn" type="button"
+                        class="bg-blue-500 hover:bg-gray-600 text-white px-6 py-2.5 rounded-xl shadow-sm transition-all text-sm font-medium">
+                        Tutup Grafik
+                    </button>
+                </div>
             </form>
         </div>
 
-        {{-- Jika tidak ada data --}}
         @if(!empty($message))
-            <div class="bg-white text-center p-8 rounded-xl shadow-md border border-gray-100">
-                <p class="text-gray-500">{{ $message }}</p>
+            <div class="bg-white text-center p-10 rounded-2xl shadow-md border border-gray-100">
+                <p class="text-gray-500 text-lg">{{ $message }}</p>
             </div>
         @else
-            {{-- Kontainer Grafik --}}
             <div id="chartsContainer" class="space-y-8">
                 {{-- Grafik Pie --}}
                 <div class="flex flex-wrap justify-center gap-8">
                     {{-- Pie Pemasukan --}}
-                    <div class="bg-white shadow-md rounded-xl p-6 w-[360px] border border-gray-100 hover:shadow-lg transition">
-                        <h3 class="text-lg font-semibold mb-3 text-center text-blue-600">
-                            Pemasukan per Kategori
+                    <div class="bg-white shadow-md rounded-2xl p-6 w-[360px] border border-gray-100 hover:shadow-lg transition-all">
+                        <h3 class="text-lg font-semibold mb-4 text-center text-black-600">
+                            💰 Pemasukan per Kategori
                         </h3>
                         <div class="w-[280px] h-[280px] mx-auto">
                             <canvas id="pemasukanChart"></canvas>
@@ -66,9 +69,9 @@
                     </div>
 
                     {{-- Pie Pengeluaran --}}
-                    <div class="bg-white shadow-md rounded-xl p-6 w-[360px] border border-gray-100 hover:shadow-lg transition">
-                        <h3 class="text-lg font-semibold mb-3 text-center text-blue-600">
-                            Pengeluaran per Kategori
+                    <div class="bg-white shadow-md rounded-2xl p-6 w-[360px] border border-gray-100 hover:shadow-lg transition-all">
+                        <h3 class="text-lg font-semibold mb-4 text-center text-black-600">
+                            💸 Pengeluaran per Kategori
                         </h3>
                         <div class="w-[280px] h-[280px] mx-auto">
                             <canvas id="pengeluaranChart"></canvas>
@@ -77,9 +80,9 @@
                 </div>
 
                 {{-- Line Chart --}}
-                <div class="bg-white shadow-md rounded-xl p-6 border border-gray-100 hover:shadow-lg transition">
+                <div class="bg-white shadow-md rounded-2xl p-6 border border-gray-100 hover:shadow-lg transition-all">
                     <h3 class="text-xl font-semibold text-center mb-5 text-blue-700">
-                        Perbandingan Pemasukan & Pengeluaran Bulan {{ $bulan }}/{{ $tahun }}
+                        📊 Perbandingan Pemasukan & Pengeluaran Bulan {{ $bulan }}/{{ $tahun }}
                     </h3>
                     <div class="w-full h-[400px]">
                         <canvas id="lineChart"></canvas>
@@ -90,7 +93,6 @@
     </div>
 </div>
 
-{{-- Chart.js --}}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
@@ -100,14 +102,13 @@
     const dataPengeluaran = @json($dataPengeluaran);
 
     const colorPalette = [
-        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0',
-        '#9966FF', '#FF9F40', '#2ecc71', '#e74c3c',
-        '#3498db', '#f1c40f', '#1abc9c', '#9b59b6'
+        '#3B82F6', '#10B981', '#F59E0B', '#EF4444',
+        '#8B5CF6', '#14B8A6', '#EAB308', '#F97316',
+        '#0EA5E9', '#22C55E', '#A855F7', '#F43F5E'
     ];
 
-    const getColors = (length) => colorPalette.slice(0, length);
+    const getColors = (len) => colorPalette.slice(0, len);
 
-    // Pie Chart Pemasukan
     new Chart(document.getElementById('pemasukanChart'), {
         type: 'pie',
         data: {
@@ -121,15 +122,13 @@
             }]
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
             plugins: {
-                legend: { position: 'bottom', labels: { color: '#333', font: { size: 12 } } }
-            }
+                legend: { position: 'bottom', labels: { color: '#333', font: { size: 13 } } }
+            },
+            maintainAspectRatio: false,
         }
     });
 
-    // Pie Chart Pengeluaran
     new Chart(document.getElementById('pengeluaranChart'), {
         type: 'pie',
         data: {
@@ -143,15 +142,13 @@
             }]
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
             plugins: {
-                legend: { position: 'bottom', labels: { color: '#333', font: { size: 12 } } }
-            }
+                legend: { position: 'bottom', labels: { color: '#333', font: { size: 13 } } }
+            },
+            maintainAspectRatio: false,
         }
     });
 
-    // Line Chart Perbandingan
     const labelsHarian = @json($labelsHarian);
     const dataPemasukanHarian = @json($dataPemasukanHarian);
     const dataPengeluaranHarian = @json($dataPengeluaranHarian);
@@ -166,7 +163,6 @@
                     data: dataPemasukanHarian,
                     borderColor: '#10B981',
                     backgroundColor: 'rgba(16, 185, 129, 0.2)',
-                    borderWidth: 2,
                     tension: 0.3,
                     fill: true
                 },
@@ -175,33 +171,28 @@
                     data: dataPengeluaranHarian,
                     borderColor: '#EF4444',
                     backgroundColor: 'rgba(239, 68, 68, 0.2)',
-                    borderWidth: 2,
                     tension: 0.3,
                     fill: true
                 }
             ]
         },
         options: {
-            responsive: true,
             plugins: {
-                legend: { position: 'bottom', labels: { font: { size: 12 } } },
+                legend: { position: 'bottom', labels: { font: { size: 13 } } },
                 tooltip: {
                     callbacks: {
-                        label: (context) => context.dataset.label + ': Rp' + context.parsed.y.toLocaleString()
+                        label: (context) => `${context.dataset.label}: Rp${context.parsed.y.toLocaleString()}`
                     }
                 }
             },
             scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: { callback: (v) => 'Rp' + v.toLocaleString() }
-                },
+                y: { beginAtZero: true, ticks: { callback: (v) => 'Rp' + v.toLocaleString() } },
                 x: { title: { display: true, text: 'Tanggal' } }
-            }
+            },
+            maintainAspectRatio: false,
         }
     });
 
-    // Tombol Sembunyi/Tampilkan Grafik
     document.getElementById('hideChartsBtn')?.addEventListener('click', (e) => {
         const container = document.getElementById('chartsContainer');
         const isHidden = container.style.display === 'none';

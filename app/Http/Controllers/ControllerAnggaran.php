@@ -10,69 +10,108 @@ use Carbon\Carbon;
 
 class ControllerAnggaran extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
 
-        // Ambil semua anggaran milik user
-        $anggaran = AnggaranBulanan::with('kategori')
-            ->where('id_users', $user->id)
-            ->get();
+        $query = AnggaranBulanan::with('kategori')
+            ->where('id_users', $user->id);
 
-        // Ambil kategori untuk dropdown form
-        $kategori = Kategori::all();
+        if ($request->filled('kategori_id')) {
+            $query->where('id_kategori', $request->kategori_id);
+        }
 
-        return view('Pages.ManajemenAnggaran', compact('anggaran', 'kategori'));
+        if ($request->filled('search')) {
+            $keyword = $request->search;
+            $query->whereHas('kategori', function ($q) use ($keyword) {
+                $q->where('kategori', 'like', "%{$keyword}%");
+            });
+        }
+
+        if ($request->filled('periode_filter')) {
+            $periode = Carbon::parse($request->periode_filter)->format('Y-m');
+            $query->where('periode', $periode);
+        }
+
+        $kategori = Kategori::orderBy('kategori', 'asc')->get();
+
+        $periodeList = AnggaranBulanan::where('id_users', $user->id)
+            ->select('periode')
+            ->distinct()
+            ->orderBy('periode', 'desc')
+            ->pluck('periode');
+
+        $anggaran = $query->orderBy('periode', 'desc')->get();
+
+        return view('Pages.ManajemenAnggaran', compact('anggaran', 'kategori', 'periodeList'));
     }
 
     public function store(Request $request)
     {
         $user = Auth::user();
 
-        $request->validate([
+        $validated = $request->validate([
             'id_kategori' => 'required|exists:kategori,id',
             'jmlh_anggaran' => 'required|numeric|min:0',
             'periode' => 'required|date',
         ]);
 
-        // 🔹 Format periode agar hanya berisi "YYYY-MM"
-        $periode = Carbon::parse($request->periode)->format('Y-m');
+        $periode = Carbon::parse($validated['periode'])->format('Y-m');
+
+        $existing = AnggaranBulanan::where('id_users', $user->id)
+            ->where('id_kategori', $validated['id_kategori'])
+            ->where('periode', $periode)
+            ->first();
+
+        if ($existing) {
+            return redirect()->back()->with('warning', '⚠️ Anggaran untuk kategori dan periode ini sudah ada.');
+        }
 
         AnggaranBulanan::create([
             'id_users' => $user->id,
-            'id_kategori' => $request->id_kategori,
-            'jmlh_anggaran' => $request->jmlh_anggaran,
+            'id_kategori' => $validated['id_kategori'],
+            'jmlh_anggaran' => $validated['jmlh_anggaran'],
             'periode' => $periode,
         ]);
 
-        return redirect()->back()->with('success', 'Anggaran berhasil ditambahkan.');
+        return redirect()->route('anggaran.index')->with('success', '✅ Anggaran berhasil ditambahkan.');
     }
 
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validated = $request->validate([
             'id_kategori' => 'required|exists:kategori,id',
             'jmlh_anggaran' => 'required|numeric|min:0',
-            'periode' => 'required|date'
+            'periode' => 'required|date',
         ]);
 
-        $anggaran = AnggaranBulanan::findOrFail($id);
+        $anggaran = AnggaranBulanan::where('id_users', Auth::id())->findOrFail($id);
+        $periode = Carbon::parse($validated['periode'])->format('Y-m');
 
-        // 🔹 Pastikan format periode juga "YYYY-MM" saat update
-        $periode = Carbon::parse($request->periode)->format('Y-m');
+        $duplicate = AnggaranBulanan::where('id_users', Auth::id())
+            ->where('id_kategori', $validated['id_kategori'])
+            ->where('periode', $periode)
+            ->where('id', '!=', $id)
+            ->exists();
+
+        if ($duplicate) {
+            return redirect()->back()->with('warning', '⚠️ Anggaran untuk kategori dan periode ini sudah ada.');
+        }
 
         $anggaran->update([
-            'id_kategori' => $request->id_kategori,
-            'jmlh_anggaran' => $request->jmlh_anggaran,
+            'id_kategori' => $validated['id_kategori'],
+            'jmlh_anggaran' => $validated['jmlh_anggaran'],
             'periode' => $periode,
         ]);
 
-        return redirect()->back()->with('success', 'Anggaran berhasil diperbarui.');
+        return redirect()->route('anggaran.index')->with('success', '✅ Anggaran berhasil diperbarui.');
     }
 
     public function destroy($id)
     {
-        AnggaranBulanan::findOrFail($id)->delete();
-        return redirect()->back()->with('success', 'Anggaran berhasil dihapus.');
+        $anggaran = AnggaranBulanan::where('id_users', Auth::id())->findOrFail($id);
+        $anggaran->delete();
+
+        return redirect()->route('anggaran.index')->with('success', '🗑️ Anggaran berhasil dihapus.');
     }
 }

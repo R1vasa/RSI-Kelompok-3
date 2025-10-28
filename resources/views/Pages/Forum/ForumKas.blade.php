@@ -25,10 +25,14 @@
                         Periode 1 - 30 November 2023
                     </h1>
                     @if ($akses->role == 'bendahara')
-                        <div>
-                            <a href="{{ route('tambah.kas.index', ['slug' => $forums->slug]) }}"
-                                class="px-5 py-2 bg-emerald-500 text-white rounded-xs">Tambah kas</a>
-                            <a href="" class="px-5 py-2 bg-yellow-500 text-white rounded-xs">Ekspor</a>
+                        <div class="flex gap-2">
+                            <a href="{{ route('tambah.trans.index', ['slug' => $forums->slug]) }}"
+                                class="px-5 py-2 bg-emerald-500 text-white rounded-lg">Tambah transaksi</a>
+                            <a href="#" class="flex items-center gap-2 px-5 py-2 bg-yellow-500 text-white rounded-lg">
+                                <i class='bx bx-export text-lg'></i>
+                                <span>Ekspor</span>
+                            </a>
+
                         </div>
                     @endif
                 </div>

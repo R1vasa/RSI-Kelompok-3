@@ -42,7 +42,7 @@ class ForumKasController extends Controller
             'tgl_transaksi_org' => 'required|date',
         ]);
 
-        $creeate = KasOrganisasi::create([
+        $create = KasOrganisasi::create([
             'id_forum' => $forum->id,
             'nama_transaksi' => $transaksi['nama_transaksi'],
             'jumlah' => $transaksi['jumlah'],

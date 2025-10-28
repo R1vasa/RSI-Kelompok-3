@@ -10,15 +10,51 @@ use Illuminate\Support\Facades\Auth;
 
 class ForumTransController extends Controller
 {
-    public function index($slug)
+    public function index(Request $request, $slug)
     {
-        $forums = ForumOrganisasi::where('slug', $slug)->first();
-        $trans = TransaksiOrganisasi::where('id_forum', $forums->id)->get();
-        $akses = AnggotaForum::where('id_users', Auth::user()->id)->first();
+        $forums = ForumOrganisasi::where('slug', $slug)->firstOrFail();
+
+        // Ambil periode dari request (contoh: "2025-10-01 to 2025-10-28")
+        $periodeAwal = null;
+        $periodeAkhir = null;
+
+        if ($request->filled('date_range')) {
+            $dates = explode(' to ', $request->date_range);
+            if (count($dates) === 2) {
+                $periodeAwal = $dates[0];
+                $periodeAkhir = $dates[1];
+            }
+        }
+
+        // Query transaksi forum
+        $query = TransaksiOrganisasi::where('id_forum', $forums->id);
+
+        // Jika ada filter tanggal, tambahkan whereBetween
+        if ($periodeAwal && $periodeAkhir) {
+            $query->whereBetween('tgl_transaksi', [$periodeAwal . ' 00:00:00', $periodeAkhir . ' 23:59:59']);
+        }
+
+        $trans = $query->orderBy('tgl_transaksi', 'desc')->get();
+
+        $akses = AnggotaForum::where('id_users', Auth::id())
+            ->where('id_forum', $forums->id)
+            ->first();
+
+        // Hitung total
         $totalPemasukan = $trans->where('jenis', 'pemasukan')->sum('nominal');
         $totalPengeluaran = $trans->where('jenis', 'pengeluaran')->sum('nominal');
         $saldoAkhir = $totalPemasukan - $totalPengeluaran;
-        return view('Pages.Forum.ForumTrans', compact('forums', 'trans', 'akses', 'totalPemasukan', 'totalPengeluaran', 'saldoAkhir'));
+
+        return view('Pages.Forum.ForumTrans', compact(
+            'forums',
+            'trans',
+            'akses',
+            'totalPemasukan',
+            'totalPengeluaran',
+            'saldoAkhir',
+            'periodeAwal',
+            'periodeAkhir'
+        ));
     }
 
     public function indexAdd($slug)

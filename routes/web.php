@@ -12,6 +12,7 @@ use App\Http\Controllers\ControllerAnggaran;
 use App\Http\Controllers\ForumController;
 use App\Http\Controllers\ForumKasController;
 use App\Http\Controllers\ForumTransController;
+use App\Http\Controllers\LaporanController;
 
 Route::get('/', function () {
     return Auth::check() ? view('Pages/Dashboard') : redirect('/login');
@@ -55,6 +56,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/transaksi/{transaksi}/edit', [TransaksiController::class, 'edit'])->name('transaksi.edit');
     Route::put('/transaksi/{transaksi}', [TransaksiController::class, 'update'])->name('transaksi.update');
     Route::delete('/transaksi/{transaksi}', [TransaksiController::class, 'destroy'])->name('transaksi.destroy');
+    Route::get('/laporan/transaksi/export', [LaporanController::class, 'exportPdf'])->name('laporan.export.pdf');
 
     // 🔹 ROUTE goals (pakai bahasa Indonesia)
     Route::get('/goals', [GoalsController::class, 'index'])->name('goals.index');
@@ -74,7 +76,7 @@ Route::middleware('auth')->group(function () {
     // 🔹 ROUTE anggaran
     Route::resource('anggaran', ControllerAnggaran::class);
 
-        // 🔹 ROUTE Forum
+    // 🔹 ROUTE Forum
     Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
     Route::get('/forum/tambah', [ForumController::class, 'indexAdd'])->name('forum.add');
     Route::post('/forum', [ForumController::class, 'add'])->name('forum.store');
@@ -102,4 +104,8 @@ Route::middleware('auth', 'hakAkses', 'isBendahara')->group(function () {
     Route::put('/forum/transaksi/{slug}/{id}/edit', [ForumTransController::class, 'update'])->name('edit.trans');
     Route::delete('/forum/transaksi/{slug}/{id}', [ForumTransController::class, 'delete'])
         ->name('forum.transaksi.destroy');
+
+    // Forum - Ekspor Laporan PDF
+    Route::get('/forum/{slug}/laporan', [LaporanController::class, 'forumPDF'])
+        ->name('forum.laporan.export');
 });

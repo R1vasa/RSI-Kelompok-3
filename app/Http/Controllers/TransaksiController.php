@@ -6,6 +6,8 @@ use App\Models\Transaksi;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\AnggaranBulanan;
+use Carbon\Carbon;
 
 class TransaksiController extends Controller
 {
@@ -80,12 +82,6 @@ class TransaksiController extends Controller
             'jenis_transaksi' => 'required|in:Pemasukan,Pengeluaran',
             'tgl_transaksi' => 'required|date',
             'id_kategori' => 'required|exists:kategori,id'
-        ],
-        [
-            'judul_transaksi' => 'judul transaksi harus diisi',
-            'judul_transaksi' => 'judul transaksi maksimal 40 karakter',
-            'jumlah_transaksi' => 'jumlah transaksi harus diisi angka positif',
-            
         ]);
 
         Transaksi::create([
@@ -97,7 +93,29 @@ class TransaksiController extends Controller
             'id_kategori' => $validated['id_kategori']
         ]);
 
-        return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil ditambahkan.');
+        if (strcasecmp($validated['jenis_transaksi'], 'Pengeluaran') === 0) {
+            $bulan = Carbon::parse($validated['tgl_transaksi'])->format('Y-m');
+            $kategoriId = $validated['id_kategori'];
+
+            $totalPengeluaran = Transaksi::where('id_users', Auth::id())
+                ->where('id_kategori', $kategoriId)
+                ->where('jenis_transaksi', 'Pengeluaran')
+                ->whereMonth('tgl_transaksi', Carbon::parse($bulan)->month)
+                ->whereYear('tgl_transaksi', Carbon::parse($bulan)->year)
+                ->sum('jumlah_transaksi');
+
+            $anggaran = AnggaranBulanan::where('id_users', Auth::id())
+                ->where('id_kategori', $kategoriId)
+                ->where('periode', $bulan)
+                ->first();
+
+            if ($anggaran && $totalPengeluaran > $anggaran->jmlh_anggaran) {
+                return redirect()->route('transaksi.index')
+                    ->with('success', 'Transaksi berhasil disimpan.')
+                    ->with('warning', '⚠️ Pengeluaran kategori ini telah melebihi anggaran bulan ini!');
+            }
+        }
+        return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil disimpan.');
     }
 
     public function edit($id)

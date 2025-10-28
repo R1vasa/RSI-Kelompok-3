@@ -6,61 +6,117 @@
 <div class="flex">
     <x-sidebar></x-sidebar>
 
-    <div class="flex-1 ml-[20%] p-6 bg-[#F8FAFC] font-poppins relative">
-        <h1 class="text-3xl font-semibold mb-6">Manajemen Anggaran</h1>
+    <div class="flex-1 ml-[20%] min-h-screen">
+        {{-- Header --}}
+        <div class="bg-[#F8FAFC] flex items-center p-1">
+            <h1 class="p-4 font-semibold font-poppins text-2xl">Manajemen Anggaran</h1>
+        </div>
 
-        {{-- Tombol Tambah --}}
-        <button onclick="openForm()" 
-            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mb-4">
-            + Tambah Anggaran
-        </button>
+        {{-- Modal sukses --}}
+        @if (session('success'))
+            <div id="success-modal" class="fixed inset-0 flex items-center justify-center z-50">
+                <div class="bg-white rounded-2xl shadow-lg p-6 w-80 text-center animate-fade-in">
+                    <div class="flex justify-center mb-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-green-500" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <h2 class="text-lg font-semibold text-gray-800">Berhasil!</h2>
+                    <p class="text-gray-600 mt-1">{{ session('success') }}</p>
+                </div>
+            </div>
 
-        {{-- Tabel Data --}}
-        <div class="bg-white shadow-md rounded-lg overflow-hidden">
-            <table class="w-full text-left border-collapse">
-                <thead class="bg-blue-600 text-white">
-                    <tr>
-                        <th class="p-5 ">Kategori</th>
-                        <th class="p-3">Jumlah (Rp)</th>
-                        <th class="p-3">Periode</th>
-                        <th class="p-3">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($anggaran as $item)
-                    <tr class="border-b hover:bg-gray-50">
-                        <td class="p-4">{{ $item->kategori->kategori ?? '-' }}</td>
-                        <td class="p-3">{{ number_format($item->jmlh_anggaran, 0, ',', '.') }}</td>
-                        <td class="p-3">{{ $item->periode }}</td>
-                        <td class="p-3 space-x-2">
-                            <button 
-                                onclick="editForm({{ $item->id }}, {{ $item->id_kategori }}, {{ $item->jmlh_anggaran }}, '{{ $item->periode }}')" 
-                                class="inline-flex items-center justify-center bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 transition">
-                                Edit
-                            </button>
-                            <form action="{{ route('anggaran.destroy', $item->id) }}" method="POST" class="inline">
-                                @csrf @method('DELETE')
-                                <button onclick="return confirm('Yakin ingin menghapus?')" 
-                                    class="inline-flex items-center justify-center bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">
-                                    Hapus
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="4" class="p-4 text-center text-gray-500">Belum ada anggaran.</td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+            <script>
+                setTimeout(() => {
+                    const modal = document.getElementById('success-modal');
+                    if (modal) {
+                        modal.classList.add('opacity-0', 'transition', 'duration-700');
+                        setTimeout(() => modal.remove(), 700);
+                    }
+                }, 3000);
+            </script>
+
+            <style>
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: scale(0.9); }
+                    to { opacity: 1; transform: scale(1); }
+                }
+                .animate-fade-in { animation: fadeIn 0.4s ease-out; }
+            </style>
+        @endif
+
+        {{-- Konten Utama --}}
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-6">
+                <button onclick="openForm()"
+                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full font-poppins">
+                    Tambah Anggaran
+                </button>
+            </div>
+
+            {{-- Tabel Data --}}
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <table class="min-w-full table-auto">
+                    <thead>
+                        <tr class="bg-blue-200">
+                            <th class="px-4 py-2 text-center font-poppins">Kategori</th>
+                            <th class="px-4 py-2 text-center font-poppins">Jumlah (Rp)</th>
+                            <th class="px-4 py-2 text-center font-poppins">Periode</th>
+                            <th class="px-4 py-2 text-center font-poppins">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($anggaran as $item)
+                            <tr class="border-b">
+                                <td class="px-4 py-2 text-center font-poppins">
+                                    {{ $item->kategori->kategori ?? '-' }}
+                                </td>
+                                <td class="px-4 py-2 text-center font-poppins">
+                                    Rp {{ number_format($item->jmlh_anggaran, 0, ',', '.') }}
+                                </td>
+                                <td class="px-4 py-2 text-center font-poppins">
+                                    {{ \Carbon\Carbon::parse($item->periode . '-01')->translatedFormat('F Y') }}
+                                </td>
+                                <td class="text-center">
+                                    <div class="flex justify-center items-center gap-3">
+                                        <button 
+                                            onclick="editForm({{ $item->id }}, {{ $item->id_kategori }}, {{ $item->jmlh_anggaran }}, '{{ $item->periode }}')" 
+                                            class="bg-green-400 hover:bg-green-600 text-white p-1 rounded-md flex items-center justify-center">
+                                            <i class='bx bxs-edit text-2xl'></i>
+                                        </button>
+
+                                        <form action="{{ route('anggaran.destroy', $item->id) }}" method="POST"
+                                            class="inline delete-form">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" 
+                                                class="bg-red-400 hover:bg-red-600 text-white p-1 rounded-md flex items-center justify-center cursor-pointer delete-btn">
+                                                <i class='bx bx-trash text-2xl'></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="text-center py-4 text-gray-500 font-poppins">
+                                    Belum ada anggaran.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
 
-{{-- Modal Form --}}
-<div id="formModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-    <div class="bg-white rounded-lg w-[90%] md:w-[400px] p-6 shadow-lg">
+{{-- Modal Form Tambah/Edit --}}
+<div id="formModal"
+    class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center z-50 transition-opacity duration-300">
+    <div class="bg-white rounded-xl shadow-lg p-6 w-[90%] md:w-[400px] text-left">
         <h2 id="formTitle" class="text-xl font-semibold mb-4">Tambah Anggaran</h2>
 
         <form id="anggaranForm" method="POST" action="{{ route('anggaran.store') }}">
@@ -82,21 +138,44 @@
             </div>
 
             <div class="mb-3">
-                <label for="periode" class="font-medium">Periode:</label>
+                <label for="periode" class="block mb-1 font-medium">Periode</label>
                 <input type="month" name="periode" id="periode" class="border rounded p-2 w-full" required>
             </div>
 
-            <div class="flex justify-end space-x-2 mt-4">
-                <button type="button" onclick="closeForm()" 
-                    class="px-3 py-1 bg-gray-400 text-white rounded hover:bg-gray-500">Batal</button>
-                <button type="submit" 
-                    class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">Simpan</button>
+            <div class="flex justify-end gap-3 mt-4">
+                <button type="button" onclick="closeForm()"
+                    class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-4 py-2 rounded-lg">
+                    Batal
+                </button>
+                <button type="submit"
+                    class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg">
+                    Simpan
+                </button>
             </div>
         </form>
     </div>
 </div>
 
-{{-- Script Modal --}}
+{{-- Modal Konfirmasi Hapus --}}
+<div id="confirmModal"
+    class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center z-50 transition-opacity duration-300">
+    <div class="bg-white rounded-xl shadow-lg p-6 w-96 text-center">
+        <h2 class="text-xl font-semibold text-gray-800 mb-2">Konfirmasi Hapus</h2>
+        <p class="text-gray-600 mb-6">Apakah kamu yakin ingin menghapus anggaran ini?</p>
+        <div class="flex justify-center gap-4">
+            <button id="cancelDelete"
+                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-4 py-2 rounded-lg">
+                Tidak
+            </button>
+            <button id="confirmDelete"
+                class="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg">
+                Ya, Hapus
+            </button>
+        </div>
+    </div>
+</div>
+
+{{-- Script --}}
 <script>
     const modal = document.getElementById('formModal');
     const form = document.getElementById('anggaranForm');
@@ -109,7 +188,6 @@
         title.textContent = "Tambah Anggaran";
         form.reset();
         modal.classList.remove('hidden');
-        modal.classList.add('flex');
     }
 
     function editForm(id, id_kategori, jmlh, periode) {
@@ -120,12 +198,39 @@
         document.getElementById('jmlhInput').value = jmlh;
         document.getElementById('periode').value = periode;
         modal.classList.remove('hidden');
-        modal.classList.add('flex');
     }
 
     function closeForm() {
         modal.classList.add('hidden');
-        modal.classList.remove('flex');
     }
+
+    // Modal hapus
+    document.addEventListener('DOMContentLoaded', function() {
+        const confirmModal = document.getElementById('confirmModal');
+        const cancelBtn = document.getElementById('cancelDelete');
+        const confirmBtn = document.getElementById('confirmDelete');
+        let formToSubmit = null;
+
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                formToSubmit = button.closest('form');
+                confirmModal.classList.remove('hidden');
+            });
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            confirmModal.classList.add('hidden');
+            formToSubmit = null;
+        });
+
+        confirmBtn.addEventListener('click', () => {
+            if (formToSubmit) formToSubmit.submit();
+            confirmModal.classList.add('hidden');
+        });
+
+        confirmModal.addEventListener('click', (e) => {
+            if (e.target === confirmModal) confirmModal.classList.add('hidden');
+        });
+    });
 </script>
 @endsection

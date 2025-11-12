@@ -1,7 +1,10 @@
 <div class="bg-linear-to-t from-[#1C69E6] to-blue-500 h-dvh w-1/5 p-1 flex flex-col fixed">
     <div>
 
-        <h1 class="font-poppins text-xl font-semibold text-white p-4">FinTrack</h1>
+        <a href="{{ route('dashboard.index') }}" >
+    <h1 class="font-poppins text-xl font-semibold text-white p-4">FinTrack</h1>
+</a>
+        
         <hr class="border-t border-blue-400 opacity-100">
     </div>
     <div class="flex-1 overflow-y-auto">

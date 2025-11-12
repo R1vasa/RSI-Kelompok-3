@@ -4,7 +4,9 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "yesDaddy": "npm run dev",
+        "Cumming" : "php artisan serve"
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.1.14",

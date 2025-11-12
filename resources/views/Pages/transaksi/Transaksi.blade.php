@@ -1,25 +1,29 @@
 @extends('Layout.layout')
+{{-- Meng-extend layout utama dari folder Layout --}}
 
 @section('title', 'Transaksi')
+{{-- Mengatur judul halaman browser menjadi "Transaksi" --}}
 
 @section('body')
     <div class="flex">
 
+        {{-- Sidebar navigasi utama --}}
         <x-sidebar></x-sidebar>
 
         {{-- KONTEN UTAMA --}}
         <div class="flex-1 ml-[20%] min-h-screen bg-[#F8FAFC]">
 
-            {{-- HEADER --}}
+            {{-- HEADER ATAS --}}
             <div class="bg-white border-b border-gray-200 flex items-center justify-between px-6 py-4">
                 <div>
                     <h1 class="text-2xl font-semibold text-gray-900 font-poppins">Transaksi</h1>
                     <p class="text-sm text-gray-500 font-poppins">Memantau aktivitas keuangan anda</p>
                 </div>
 
+                {{-- Bagian kanan header: tombol search dan profil --}}
                 <div class="flex items-center gap-5">
 
-                    {{-- 1. Tombol Ikon Search (Trigger) --}}
+                    {{-- 1️⃣ Tombol ikon search --}}
                     <button id="search-icon-btn" class="text-gray-500 hover:text-gray-700">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
@@ -28,12 +32,12 @@
                         </svg>
                     </button>
 
-                    {{-- 2. Input Search (Tersembunyi, tapi terhubung ke 'filterForm') --}}
+                    {{-- 2️⃣ Input pencarian (hidden secara default) --}}
                     <input type="text" name="search_judul" id="search-input-field" form="filterForm"
                         placeholder="Cari & tekan Enter" value="{{ request('search_judul') }}"
                         class="hidden w-48 text-sm outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 border rounded-lg px-3 py-1.5 shadow-sm">
 
-
+                    {{-- 3️⃣ Avatar dan info user login --}}
                     <div class="flex items-center gap-2">
                         <img class="w-8 h-8 rounded-full"
                             src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->nama) }}&background=e0e7ff&color=4f46e5"
@@ -46,9 +50,11 @@
                 </div>
             </div>
 
-            {{-- Modal sukses dan peringatan anggaran--}}
+            {{-- ✅ Modal sukses dan peringatan anggaran --}}
             @if (session('success') || session('warning'))
                 <div id="modal-wrapper" class="fixed inset-0 flex items-center justify-center z-50 space-x-4">
+
+                    {{-- Modal sukses --}}
                     @if (session('success'))
                         <div id="success-modal" class="bg-white rounded-2xl shadow-lg p-6 w-80 text-center animate-fade-in">
                             <div class="flex justify-center mb-3">
@@ -63,8 +69,10 @@
                         </div>
                     @endif
 
+                    {{-- Modal peringatan --}}
                     @if (session('warning'))
-                        <div id="warning-modal" class="bg-white rounded-2xl shadow-lg p-6 w-80 text-center animate-fade-in border-2 border-yellow-400 hidden">
+                        <div id="warning-modal"
+                            class="bg-white rounded-2xl shadow-lg p-6 w-80 text-center animate-fade-in border-2 border-yellow-400 hidden">
                             <div class="flex justify-center mb-3">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-yellow-500" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
@@ -79,15 +87,16 @@
                 </div>
             @endif
 
+            {{-- 🔧 Script animasi modal --}}
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
                     const successModal = document.getElementById('success-modal');
                     const warningModal = document.getElementById('warning-modal');
                     const wrapper = document.getElementById('modal-wrapper');
-                    const duration = 2500;
+                    const duration = 2500; // durasi tampil modal (ms)
 
+                    // Jika ada success dan warning muncul bergantian
                     if (successModal && warningModal) {
-                        // tampilkan success dulu
                         setTimeout(() => {
                             successModal.classList.add('opacity-0', 'transition', 'duration-500');
                             setTimeout(() => {
@@ -99,7 +108,9 @@
                                 }, duration);
                             }, 500);
                         }, duration);
-                    } else if (successModal || warningModal) {
+                    } 
+                    // Jika hanya satu modal
+                    else if (successModal || warningModal) {
                         const modal = successModal || warningModal;
                         setTimeout(() => {
                             modal.classList.add('opacity-0', 'transition', 'duration-500');
@@ -109,24 +120,25 @@
                 });
             </script>
 
+            {{-- CSS animasi fade in modal --}}
             <style>
             @keyframes fade-in {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+                from { opacity: 0; transform: scale(0.95); }
+                to { opacity: 1; transform: scale(1); }
             }
             .animate-fade-in {
-            animation: fade-in 0.4s ease-out;
+                animation: fade-in 0.4s ease-out;
             }
             </style>
 
-            {{-- 🔹 FILTER TRANSAKSI --}}
+            {{-- 🔹 BAGIAN FILTER TRANSAKSI --}}
             <div class="p-6">
                 <div class="flex justify-between items-center mb-6">
 
-                    <form method="GET" action="{{ route('transaksi.index') }}" class="flex items-center gap-2"
-                        id="filterForm">
+                    {{-- Form filter transaksi --}}
+                    <form method="GET" action="{{ route('transaksi.index') }}" class="flex items-center gap-2" id="filterForm">
 
-                        {{-- Date Range --}}
+                        {{-- Filter: Rentang tanggal --}}
                         <div class="flex items-center border bg-white rounded-lg px-3 py-2 text-sm text-gray-600 shadow-sm">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -140,32 +152,27 @@
                                 value="{{ request('date_range') }}">
                         </div>
 
-                        {{-- Jenis --}}
+                        {{-- Filter: Jenis transaksi --}}
                         <select name="jenis_transaksi" onchange="submitFilterForm()"
                             class="border bg-white rounded-lg px-3 py-2 text-sm text-gray-600 shadow-sm focus:ring-blue-500">
                             <option value="">Semua Jenis</option>
-                            <option value="pemasukan" {{ request('jenis_transaksi') == 'pemasukan' ? 'selected' : '' }}>
-                                Pemasukan</option>
-                            <option value="pengeluaran" {{ request('jenis_transaksi') == 'pengeluaran' ? 'selected' : '' }}>
-                                Pengeluaran</option>
+                            <option value="pemasukan" {{ request('jenis_transaksi') == 'pemasukan' ? 'selected' : '' }}>Pemasukan</option>
+                            <option value="pengeluaran" {{ request('jenis_transaksi') == 'pengeluaran' ? 'selected' : '' }}>Pengeluaran</option>
                         </select>
 
-                        {{-- Kategori --}}
+                        {{-- Filter: Kategori --}}
                         <select name="kategori_id" onchange="submitFilterForm()"
                             class="border bg-white rounded-lg px-3 py-2 text-sm text-gray-600 shadow-sm focus:ring-blue-500">
                             <option value="">Semua Kategori</option>
                             @foreach ($kategoris ?? [] as $kategori)
-                                <option value="{{ $kategori->id }}"
-                                    {{ request('kategori_id') == $kategori->id ? 'selected' : '' }}>
+                                <option value="{{ $kategori->id }}" {{ request('kategori_id') == $kategori->id ? 'selected' : '' }}>
                                     {{ $kategori->kategori }}
                                 </option>
                             @endforeach
                         </select>
 
-                        {{-- Reset --}}
-                        <a href="{{ route('transaksi.index') }}"
-                            class="flex items-center text-sm text-indigo-600 hover:text-indigo-800 ml-2 font-medium">
-
+                        {{-- Tombol reset filter --}}
+                        <a href="{{ route('transaksi.index') }}" class="flex items-center text-sm text-indigo-600 hover:text-indigo-800 ml-2 font-medium">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -175,21 +182,22 @@
                         </a>
                     </form>
 
-                    {{-- Tombol Ekspor dan Tambah --}}
+                    {{-- Tombol Ekspor PDF dan Tambah Transaksi --}}
                     <div class="flex items-center gap-3">
+                        {{-- Tombol Ekspor --}}
                         <form action="{{ route('laporan.export.pdf') }}" method="GET">
                             <input type="hidden" name="date_range" value="{{ request('date_range') }}">
                             <input type="hidden" name="jenis_transaksi" value="{{ request('jenis_transaksi') }}">
                             <input type="hidden" name="kategori_id" value="{{ request('kategori_id') }}">
-                            <button type="submit"
-                                class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 flex items-center">
+                            <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 flex items-center">
                                 <i class='bx bx-file mr-2'></i> Ekspor PDF
                             </button>
                         </form>
+
+                        {{-- Tombol Tambah --}}
                         <a href="{{ route('transaksi.create') }}"
                             class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-poppins text-sm flex items-center gap-2 shadow-sm">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor"
-                                viewBox="0 0 20 20">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
                                     d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
                                     clip-rule="evenodd" />
@@ -199,7 +207,7 @@
                     </div>
                 </div>
 
-                {{-- 🔹 TABEL TRANSAKSI (versi baru) --}}
+                {{-- 🔹 TABEL DATA TRANSAKSI --}}
                 <div class="bg-white shadow-md overflow-hidden">
                     <table class="min-w-full table-auto border-1 border-gray-300">
                         <thead>
@@ -215,25 +223,35 @@
                         <tbody>
                             @foreach ($transaksis as $transaksi)
                                 <tr class="hover:bg-gray-50">
+                                    {{-- Kolom judul transaksi --}}
                                     <td class="px-4 py-2 font-poppins text-center">{{ $transaksi->judul_transaksi }}</td>
-                                    <td class="px-4 py-2 font-poppins text-center">{{ $transaksi->kategori->kategori }}
-                                    </td>
-                                    <td class="px-4 py-2 font-poppins text-center">
-                                        {{ ucfirst($transaksi->jenis_transaksi) }}
-                                    </td>
+
+                                    {{-- Kolom kategori --}}
+                                    <td class="px-4 py-2 font-poppins text-center">{{ $transaksi->kategori->kategori }}</td>
+
+                                    {{-- Kolom jenis transaksi --}}
+                                    <td class="px-4 py-2 font-poppins text-center">{{ ucfirst($transaksi->jenis_transaksi) }}</td>
+
+                                    {{-- Kolom jumlah transaksi --}}
                                     <td class="px-4 py-2 font-poppins text-center">
                                         Rp {{ number_format($transaksi->jumlah_transaksi, 0, ',', '.') }}
                                     </td>
+
+                                    {{-- Kolom tanggal transaksi --}}
                                     <td class="px-4 py-2 font-poppins text-center">
                                         {{ \Carbon\Carbon::parse($transaksi->tgl_transaksi)->format('d-m-Y') }}
                                     </td>
+
+                                    {{-- Kolom aksi edit & hapus --}}
                                     <td class="text-center">
                                         <div class="flex justify-center items-center gap-3">
+                                            {{-- Tombol edit --}}
                                             <a href="{{ route('transaksi.edit', $transaksi->id) }}"
                                                 class="bg-green-400 hover:bg-green-600 text-white p-1 rounded-md font-poppins flex items-center justify-center">
                                                 <i class='bx bxs-edit text-2xl'></i>
                                             </a>
 
+                                            {{-- Tombol hapus dengan modal konfirmasi --}}
                                             <form action="{{ route('transaksi.destroy', $transaksi->id) }}"
                                                 method="POST" class="inline delete-form">
                                                 @csrf
@@ -254,7 +272,7 @@
         </div>
     </div>
 
-    {{-- 🔹 Modal Konfirmasi Delete --}}
+    {{-- 🔹 Modal konfirmasi hapus --}}
     <div id="confirmModal" class="fixed inset-0 bg-black/40 hidden flex items-center justify-center z-50">
         <div class="bg-white rounded-xl shadow-lg p-6 w-96 text-center">
             <h2 class="text-xl font-semibold text-gray-800 mb-2">Konfirmasi Hapus</h2>
@@ -268,7 +286,7 @@
         </div>
     </div>
 
-    {{-- 🔸 Script Modal Delete --}}
+    {{-- 🔸 Script untuk modal hapus --}}
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const modal = document.getElementById('confirmModal');
@@ -276,6 +294,7 @@
             const confirmBtn = document.getElementById('confirmDelete');
             let formToSubmit = null;
 
+            // Saat tombol hapus diklik
             document.querySelectorAll('.delete-btn').forEach(button => {
                 button.addEventListener('click', () => {
                     formToSubmit = button.closest('form');
@@ -283,30 +302,33 @@
                 });
             });
 
+            // Tombol batal
             cancelBtn.addEventListener('click', () => {
                 modal.classList.add('hidden');
                 formToSubmit = null;
             });
 
+            // Tombol konfirmasi hapus
             confirmBtn.addEventListener('click', () => {
                 if (formToSubmit) formToSubmit.submit();
                 modal.classList.add('hidden');
             });
 
+            // Klik di luar modal = tutup modal
             modal.addEventListener('click', e => {
                 if (e.target === modal) modal.classList.add('hidden');
             });
         });
     </script>
 
-    {{-- 🔸 Script Auto Submit Filter --}}
+    {{-- 🔸 Script untuk auto-submit filter --}}
     <script>
         function submitFilterForm() {
             setTimeout(() => document.getElementById('filterForm').submit(), 100);
         }
     </script>
 
-    {{-- 🔸 Script Litepicker --}}
+    {{-- 🔸 Script Litepicker (kalender tanggal) --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const picker = new Litepicker({
@@ -322,9 +344,10 @@
                 setup: (picker) => {
                     picker.on('selected', (date1, date2) => {
                         const hidden = document.getElementById('date_range_hidden');
-                        if (date1 && date2) hidden.value = date1.format('YYYY-MM-DD') + ' to ' +
-                            date2.format('YYYY-MM-DD');
-                        else hidden.value = '';
+                        if (date1 && date2)
+                            hidden.value = date1.format('YYYY-MM-DD') + ' to ' + date2.format('YYYY-MM-DD');
+                        else
+                            hidden.value = '';
                         submitFilterForm();
                     });
                 },
@@ -332,34 +355,36 @@
         });
     </script>
 
+    {{-- 🔸 Script input search toggle --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const searchBtn = document.getElementById('search-icon-btn');
             const searchInput = document.getElementById('search-input-field');
 
-            // 1. Saat ikon search diklik
+            // Tampilkan input search saat ikon diklik
             searchBtn.addEventListener('click', function() {
-                searchBtn.classList.add('hidden'); // Sembunyikan ikon
-                searchInput.classList.remove('hidden'); // Tampilkan input
-                searchInput.focus(); // Langsung fokus ke input
+                searchBtn.classList.add('hidden');
+                searchInput.classList.remove('hidden');
+                searchInput.focus();
             });
 
-            // 2. Saat klik di luar input (blur)
+            // Sembunyikan input jika dikosongkan
             searchInput.addEventListener('blur', function() {
-
                 if (searchInput.value === '') {
-                    searchInput.classList.add('hidden'); // Sembunyikan input
-                    searchBtn.classList.remove('hidden'); // Tampilkan lagi ikon
+                    searchInput.classList.add('hidden');
+                    searchBtn.classList.remove('hidden');
                 }
             });
 
+            // Tekan Enter untuk cari langsung
             searchInput.addEventListener('keydown', function(event) {
                 if (event.key === 'Enter') {
-                    event.preventDefault(); // Mencegah aksi default 'Enter'
-                    submitFilterForm(); // Memanggil fungsi auto-submit Anda yang sudah ada
+                    event.preventDefault();
+                    submitFilterForm();
                 }
             });
 
+            // Jika ada nilai pencarian sebelumnya, tampilkan input
             if (searchInput.value !== '') {
                 searchBtn.classList.add('hidden');
                 searchInput.classList.remove('hidden');
@@ -367,3 +392,4 @@
         });
     </script>
 @endsection
+

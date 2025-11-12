@@ -18,7 +18,7 @@ class TransaksiController extends Controller
             ->where('id_users', Auth::id());
 
         // 3. Terapkan filter JIKA ada input dari form
-        
+
         // Filter berdasarkan Jenis Transaksi (pemasukan/pengeluaran)
         if ($request->filled('jenis_transaksi')) {
             // $request->jenis_transaksi akan berisi "pemasukan" atau "pengeluaran"
@@ -31,7 +31,7 @@ class TransaksiController extends Controller
             // Kolom di DB Anda adalah 'id_kategori' (berdasarkan method store)
             $query->where('id_kategori', $request->kategori_id);
         }
-        
+
         // Filter berdasarkan Judul Transaksi (Search)
         if ($request->filled('search_judul')) {
             $query->where('judul_transaksi', 'like', '%' . $request->search_judul . '%');
@@ -41,12 +41,12 @@ class TransaksiController extends Controller
         if ($request->filled('date_range')) {
             // $request->date_range akan berisi "YYYY-MM-DD to YYYY-MM-DD"
             $dates = explode(' to ', $request->date_range);
-            
+
             // Pastikan formatnya benar (ada 2 tanggal)
             if (count($dates) == 2) {
                 $startDate = $dates[0] . ' 00:00:00';
                 $endDate = $dates[1] . ' 23:59:59';
-                
+
                 // Gunakan whereBetween untuk rentang tanggal
                 $query->whereBetween('tgl_transaksi', [$startDate, $endDate]);
             }
@@ -127,18 +127,20 @@ class TransaksiController extends Controller
 
     public function update(Request $request, $id)
     {
-        $validated = $request->validate([
-            'judul_transaksi' => 'required|string|max:40',
-            'jumlah_transaksi' => 'required|numeric|min:1',
-            'jenis_transaksi' => 'required|in:pemasukan,pengeluaran',
-            'tgl_transaksi' => 'required|date',
-            'id_kategori' => 'required|exists:kategori,id'
-        ],
+        $validated = $request->validate(
             [
-            'judul_transaksi' => 'judul transaksi harus diisi',
-            'judul_transaksi' => 'judul transaksi maksimal 40 karakter',
-            'jumlah_transaksi' => 'jumlah transaksi harus diisi angka positif',
-        ]);
+                'judul_transaksi' => 'required|string|max:40',
+                'jumlah_transaksi' => 'required|numeric|min:1',
+                'jenis_transaksi' => 'required|in:pemasukan,pengeluaran',
+                'tgl_transaksi' => 'required|date',
+                'id_kategori' => 'required|exists:kategori,id'
+            ],
+            [
+                'judul_transaksi' => 'judul transaksi harus diisi',
+                'judul_transaksi' => 'judul transaksi maksimal 40 karakter',
+                'jumlah_transaksi' => 'jumlah transaksi harus diisi angka positif',
+            ]
+        );
 
         $transaksi = Transaksi::where('id_users', Auth::id())->findOrFail($id);
         $transaksi->update($validated);

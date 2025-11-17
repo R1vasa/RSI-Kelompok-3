@@ -13,9 +13,13 @@ use App\Http\Controllers\ForumController;
 use App\Http\Controllers\ForumKasController;
 use App\Http\Controllers\ForumTransController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
-    return Auth::check() ? view('Pages/Dashboard') : redirect('/login');
+    if (!Auth::check()) {
+        return redirect('/login');
+    }
+    return app(DashboardController::class)->index();
 });
 
 Route::middleware('guest')->group(function () {
@@ -34,11 +38,9 @@ Route::middleware('auth',)->group(function () {
     Route::get('/otp/resend', [OtpController::class, 'resend'])->name('otp.resend');
 });
 
-Route::middleware(['auth', 'verification'])->group(function () {
-    Route::get('/', function () {
-        return view('Pages/Dashboard');
-    })->name('dashboard');
-});
+Route::get('/dashboard', function () {
+    return view('Pages/Dashboard');
+})->name('dashboard');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -48,6 +50,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
         return view('Pages/Dashboard');
     })->name('dashboard');
+    Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])
+    ->name('dashboard.index')
+    ->middleware('auth');
 
     // 🔹 ROUTE TRANSAKSI (pakai bahasa Indonesia)
     Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');

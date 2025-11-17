@@ -118,4 +118,40 @@ class GrafikController extends Controller
             'message' => null
         ]);
     }
+
+    private function getChartData($bulan, $tahun)
+    {
+        $user = Auth::user();
+
+        $transaksi = Transaksi::with('kategori')
+            ->where('id_users', $user->id)
+            ->whereMonth('tgl_transaksi', $bulan)
+            ->whereYear('tgl_transaksi', $tahun)
+            ->get();
+
+        $totalPemasukan = $transaksi->where('jenis_transaksi', 'pemasukan')->sum('jumlah_transaksi');
+        $totalPengeluaran = $transaksi->where('jenis_transaksi', 'pengeluaran')->sum('jumlah_transaksi');
+
+        $saldo = $totalPemasukan - $totalPengeluaran;
+
+        return [
+            'totalPemasukan' => $totalPemasukan,
+            'totalPengeluaran' => $totalPengeluaran,
+            'saldo' => $saldo
+        ];
+    }
+    public function dashboard(Request $request)
+    {
+        // Ambil bulan & tahun (default bulan ini)
+        $bulan = $request->bulan ?? date('m');
+        $tahun = $request->tahun ?? date('Y');
+
+        // Panggil ulang logic yang sama seperti grafik index
+        $chartData = $this->getChartData($bulan, $tahun);
+
+        return view('Pages.Dashboard', $chartData + [
+            'bulan' => $bulan,
+            'tahun' => $tahun
+        ]);
+    }
 }

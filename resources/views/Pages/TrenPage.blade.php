@@ -57,7 +57,7 @@
         @else
             <div id="chartsContainer" class="space-y-8">
                 {{-- Grafik Pie --}}
-                <div class="flex flex-wrap justify-center gap-8">
+                <div class="flex flex-wrap justify-center gap-8 mb-6">
                     {{-- Pie Pemasukan --}}
                     <div class="bg-white shadow-md rounded-2xl p-6 w-[360px] border border-gray-100 hover:shadow-lg transition-all">
                         <h3 class="text-lg font-semibold mb-4 text-center text-black-600">

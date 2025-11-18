@@ -6,38 +6,56 @@
 
 @section('body')
     <!-- ==============================================================
-                 HALAMAN DAFTAR FORUM ORGANISASI
-                 Fungsi:
-                 - Menampilkan semua forum yang diikuti/dibuat oleh user.
-                 - Menyediakan fitur untuk membuat forum baru (Tambah Forum).
-                 - Menyediakan fitur untuk bergabung dengan forum (Join Forum).
-            ============================================================== -->
+                     HALAMAN DAFTAR FORUM ORGANISASI
+                     Fungsi:
+                     - Menampilkan semua forum yang diikuti/dibuat oleh user.
+                     - Menyediakan fitur untuk membuat forum baru (Tambah Forum).
+                     - Menyediakan fitur untuk bergabung dengan forum (Join Forum).
+                ============================================================== -->
     <div class="flex">
         <!-- Sidebar navigasi utama (komponen global) -->
         <x-sidebar></x-sidebar>
 
         <!-- ======================================
-                     AREA KONTEN UTAMA
-                ======================================= -->
+                         AREA KONTEN UTAMA
+                    ======================================= -->
         <div class="flex-1 ml-[20%] min-h-screen">
             <!-- Header bagian atas halaman -->
-            <div class="bg-[#F8FAFC] flex items-center p-1">
-                @auth
-                    <!-- Menampilkan sapaan untuk user yang sedang login -->
-                    <h1 class="p-4 font-semibold font-poppins text-2xl">
-                        Welcome, {{ Auth::user()->nama }}
-                    </h1>
-                @endauth
+            <div class="bg-white border-b border-gray-200 flex items-center justify-between px-6 py-4">
+                <div>
+                    <h1 class="text-2xl font-semibold text-gray-900 font-poppins">Forum</h1>
+                    <p class="text-sm text-gray-500 font-poppins">Memantau aktivitas keuangan anda</p>
+                </div>
+
+                {{-- Bagian kanan header: tombol search dan profil --}}
+                <div class="flex items-center gap-5">
+
+                    {{-- 2️⃣ Input pencarian (hidden secara default) --}}
+                    <input type="text" name="search_judul" id="search-input-field" form="filterForm"
+                        placeholder="Cari & tekan Enter" value="{{ request('search_judul') }}"
+                        class="hidden w-48 text-sm outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 border rounded-lg px-3 py-1.5 shadow-sm">
+
+                    {{-- 3️⃣ Avatar dan info user login --}}
+                    <div class="flex items-center gap-2">
+                        <img class="w-8 h-8 rounded-full"
+                            src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->nama) }}&background=e0e7ff&color=4f46e5"
+                            alt="Avatar">
+                        <div>
+                            <p class="text-sm font-medium text-gray-700 font-poppins">{{ Auth::user()->nama }}</p>
+                            <p class="text-xs text-gray-500 font-poppins">{{ Auth::user()->email }}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- ======================================
-                         KONTEN UTAMA: LIST FORUM
-                    ======================================= -->
+                             KONTEN UTAMA: LIST FORUM
+                        ======================================= -->
             <div class="p-6">
                 <!-- ======================
-                             Tombol Aksi di Header
-                             (Tambah Forum & Join Forum)
-                        ======================= -->
+                                 Tombol Aksi di Header
+                                 (Tambah Forum & Join Forum)
+                            ======================= -->
                 <div class="flex items-center mb-6 flex-row-reverse gap-2">
                     <!-- Tombol Tambah Forum -->
                     <a href="{{ route('forum.add') }}"
@@ -46,15 +64,16 @@
                     </a>
 
                     <!-- Tombol Join Forum -->
-                    <button id="openModal" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-poppins">
+                    <button id="openModal"
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-poppins">
                         Join Forum
                     </button>
                 </div>
 
                 <!-- ======================
-                             LOOP DAFTAR FORUM
-                             Menampilkan setiap forum yang user ikuti atau buat
-                        ======================= -->
+                                 LOOP DAFTAR FORUM
+                                 Menampilkan setiap forum yang user ikuti atau buat
+                            ======================= -->
                 @foreach ($forums as $forum)
                     <div class="bg-[#F2F9FF] shadow-md rounded-full p-2 flex items-center space-x-4 mb-4">
                         <!-- Gambar forum -->
@@ -94,9 +113,9 @@
                     </div>
 
                     <!-- ======================
-                                 MODAL LINK FORUM
-                                 Menampilkan kode link akses forum
-                                 (Hanya untuk bendahara forum)
+                                     MODAL LINK FORUM
+                                     Menampilkan kode link akses forum
+                                     (Hanya untuk bendahara forum)
     ======================= -->
                     <div id="modalLink{{ $loop->index }}"
                         class="fixed inset-0 bg-black/50 hidden justify-center items-center z-50">
@@ -122,9 +141,9 @@
             </div>
 
             <!-- ======================
-                         MODAL JOIN FORUM
-                         Digunakan untuk memasukkan kode forum
-                    ======================= -->
+                             MODAL JOIN FORUM
+                             Digunakan untuk memasukkan kode forum
+                        ======================= -->
             <div id="modal" class="fixed inset-0 bg-black/50 hidden justify-center items-center z-50">
                 <div class="bg-white rounded-xl shadow-lg p-8 w-[400px] relative">
                     <!-- Tombol Tutup Modal -->
@@ -160,12 +179,12 @@
     </div>
 
     <!-- ==========================================================
-                 SCRIPT: PENGATURAN MODAL (Join & Link Forum)
-                 Fungsi:
-                 - Membuka & menutup modal join forum
-                 - Menampilkan modal link forum (per forum)
-                 - Menutup modal jika klik di luar area
-            =========================================================== -->
+                     SCRIPT: PENGATURAN MODAL (Join & Link Forum)
+                     Fungsi:
+                     - Membuka & menutup modal join forum
+                     - Menampilkan modal link forum (per forum)
+                     - Menutup modal jika klik di luar area
+                =========================================================== -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // === Modal Join Forum ===

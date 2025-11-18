@@ -1,4 +1,4 @@
-@extends('Layout.layout') 
+@extends('Layout.layout')
 {{-- Meng-extend layout utama yang ada di folder Layout --}}
 
 @section('title', 'Edit Goals')
@@ -12,11 +12,31 @@
 
         {{-- Konten utama halaman --}}
         <div class="flex-1 ml-[20%] min-h-screen">
-            <div class="bg-[#F8FAFC] flex items-center p-1">
-                @auth
-                    {{-- Hanya tampil jika user sudah login --}}
-                    <h1 class="p-4 font-semibold font-poppins text-2xl">Edit Goals</h1>
-                @endauth
+            <div class="bg-white border-b border-gray-200 flex items-center justify-between px-6 py-4">
+                <div>
+                    <h1 class="text-2xl font-semibold text-gray-900 font-poppins">Edit Goals</h1>
+                    <p class="text-sm text-gray-500 font-poppins">Memantau aktivitas keuangan anda</p>
+                </div>
+
+                {{-- Bagian kanan header: tombol search dan profil --}}
+                <div class="flex items-center gap-5">
+
+                    {{-- 2️⃣ Input pencarian (hidden secara default) --}}
+                    <input type="text" name="search_judul" id="search-input-field" form="filterForm"
+                        placeholder="Cari & tekan Enter" value="{{ request('search_judul') }}"
+                        class="hidden w-48 text-sm outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 border rounded-lg px-3 py-1.5 shadow-sm">
+
+                    {{-- 3️⃣ Avatar dan info user login --}}
+                    <div class="flex items-center gap-2">
+                        <img class="w-8 h-8 rounded-full"
+                            src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->nama) }}&background=e0e7ff&color=4f46e5"
+                            alt="Avatar">
+                        <div>
+                            <p class="text-sm font-medium text-gray-700 font-poppins">{{ Auth::user()->nama }}</p>
+                            <p class="text-xs text-gray-500 font-poppins">{{ Auth::user()->email }}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             {{-- Card utama untuk form edit --}}
@@ -31,7 +51,8 @@
                     {{-- Input judul goals --}}
                     <div class="mb-3">
                         <label class="block font-medium">Judul goals</label>
-                        <input type="text" name="judul_goals" class="bg-blue-100 opacity-60 w-full border rounded-full px-3 py-2"
+                        <input type="text" name="judul_goals"
+                            class="bg-blue-100 opacity-60 w-full border rounded-full px-3 py-2"
                             value="{{ old('judul_goals', $goals->judul_goals) }}" required>
                         @error('judul_goals')
                             {{-- Menampilkan pesan error jika validasi gagal --}}
@@ -42,8 +63,10 @@
                     {{-- Input jumlah target --}}
                     <div class="mb-3">
                         <label class="block font-medium">Jumlah Target(Rp)</label>
-                        <input type="number" name="jumlah_target" value="{{old('jumlah_target', $goals->jumlah_target)}}" class="bg-blue-100 opacity-60 w-full border rounded-full px-3 py-2
-                            value="{{ old('jumlah_target', $goals->jumlah_target) }}" required>
+                        <input type="number" name="jumlah_target" value="{{ old('jumlah_target', $goals->jumlah_target) }}"
+                            class="bg-blue-100 opacity-60 w-full border rounded-full px-3 py-2
+                            value="{{ old('jumlah_target', $goals->jumlah_target) }}"
+                            required>
                         @error('jumlah_target')
                             <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -52,7 +75,8 @@
                     {{-- Input tanggal target --}}
                     <div class="mb-3">
                         <label class="block font-medium">Tanggal</label>
-                        <input type="date" name="tgl_target" class="bg-blue-100 opacity-60 w-full border rounded-full px-3 py-2"
+                        <input type="date" name="tgl_target"
+                            class="bg-blue-100 opacity-60 w-full border rounded-full px-3 py-2"
                             value="{{ old('tgl_target', $goals->tgl_target) }}" required>
                         @error('tgl_target')
                             <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
@@ -62,7 +86,8 @@
                     {{-- Input upload gambar goals (opsional) --}}
                     <div class="mb-3">
                         <label class="block font-medium">Gambar Goals (opsional)</label>
-                        <input type="file" name="gambar" accept="image/*" class="bg-blue-100 opacity-60 w-full border rounded-full px-3 py-2">
+                        <input type="file" name="gambar" accept="image/*"
+                            class="bg-blue-100 opacity-60 w-full border rounded-full px-3 py-2">
                         @error('gambar')
                             <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -90,11 +115,11 @@
                 const preview = document.createElement('img'); // Buat elemen img baru
                 preview.src = URL.createObjectURL(file); // Buat URL sementara untuk preview
                 preview.className = 'w-32 h-32 object-cover rounded-lg border mt-2';
-                
+
                 // Hapus preview lama jika ada
                 const old = document.querySelector('.preview-image');
                 if (old) old.remove();
-                
+
                 // Tambahkan class dan tampilkan di bawah input file
                 preview.classList.add('preview-image');
                 e.target.parentNode.insertBefore(preview, e.target.nextSibling);
@@ -102,4 +127,3 @@
         });
     </script>
 @endsection
-

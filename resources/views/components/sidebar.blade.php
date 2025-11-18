@@ -3,10 +3,10 @@
     <!-- Header Sidebar -->
     <div>
 
-        <a href="{{ route('dashboard.index') }}" >
-    <h1 class="font-poppins text-xl font-semibold text-white p-4">FinTrack</h1>
-</a>
-        
+        <a href="{{ route('dashboard.index') }}">
+            <h1 class="font-poppins text-xl font-semibold text-white p-4">FinTrack</h1>
+        </a>
+
         <hr class="border-t border-blue-400 opacity-100">
     </div>
 

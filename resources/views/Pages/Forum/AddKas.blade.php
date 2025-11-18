@@ -6,10 +6,10 @@
 
 @section('body')
     <!-- =========================================================
-                 HALAMAN TAMBAH KAS (FORUM ORGANISASI)
-                 Fungsinya: Memungkinkan user menambahkan data kas baru
-                 ke dalam forum organisasi tertentu.
-            ========================================================== -->
+                         HALAMAN TAMBAH KAS (FORUM ORGANISASI)
+                         Fungsinya: Memungkinkan user menambahkan data kas baru
+                         ke dalam forum organisasi tertentu.
+                    ========================================================== -->
     <div class="flex">
         <!-- Sidebar Navigasi -->
         <x-sidebar></x-sidebar>
@@ -18,26 +18,46 @@
         <div class="flex-1 ml-[20%] min-h-screen font-poppins">
 
             <!-- Header Halaman -->
-            <div class="bg-[#F8FAFC] flex items-center p-1">
-                @auth
-                    <!-- Menampilkan nama forum jika user sedang login -->
-                    <h1 class="p-4 font-semibold font-poppins text-2xl">{{ $forums->forum }}</h1>
-                @endauth
+            <div class="bg-white border-b border-gray-200 flex items-center justify-between px-6 py-4">
+                <div>
+                    <h1 class="text-2xl font-semibold text-gray-900 font-poppins">Tambah Kas Forum</h1>
+                    <p class="text-sm text-gray-500 font-poppins">Memantau aktivitas keuangan anda</p>
+                </div>
+
+                {{-- Bagian kanan header: tombol search dan profil --}}
+                <div class="flex items-center gap-5">
+
+                    {{-- 2️⃣ Input pencarian (hidden secara default) --}}
+                    <input type="text" name="search_judul" id="search-input-field" form="filterForm"
+                        placeholder="Cari & tekan Enter" value="{{ request('search_judul') }}"
+                        class="hidden w-48 text-sm outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 border rounded-lg px-3 py-1.5 shadow-sm">
+
+                    {{-- 3️⃣ Avatar dan info user login --}}
+                    <div class="flex items-center gap-2">
+                        <img class="w-8 h-8 rounded-full"
+                            src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->nama) }}&background=e0e7ff&color=4f46e5"
+                            alt="Avatar">
+                        <div>
+                            <p class="text-sm font-medium text-gray-700 font-poppins">{{ Auth::user()->nama }}</p>
+                            <p class="text-xs text-gray-500 font-poppins">{{ Auth::user()->email }}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- ======================================================
-                         FORM TAMBAH DATA KAS
-                         Aksi: route('tambah.kas', ['slug' => $forums->slug])
-                         Metode: POST
-                         Tujuan: Menyimpan transaksi kas baru ke database
-                    ======================================================= -->
+                                 FORM TAMBAH DATA KAS
+                                 Aksi: route('tambah.kas', ['slug' => $forums->slug])
+                                 Metode: POST
+                                 Tujuan: Menyimpan transaksi kas baru ke database
+                            ======================================================= -->
             <div class="bg-white p-6">
                 <form action="{{ route('tambah.kas', ['slug' => $forums->slug]) }}" method="POST">
                     @csrf <!-- Token keamanan Laravel untuk mencegah CSRF attack -->
 
                     <!-- ======================
-                                 Input: Nama Transaksi
-                            ======================= -->
+                                         Input: Nama Transaksi
+                                    ======================= -->
                     <div class="mb-3">
                         <label class="block font-semibold text-md mb-2">Nama</label>
                         <div class="mx-4">
@@ -48,8 +68,8 @@
                     </div>
 
                     <!-- ======================
-                                 Input: Jumlah Uang
-                            ======================= -->
+                                         Input: Jumlah Uang
+                                    ======================= -->
                     <div class="mb-3">
                         <label class="block font-semibold text-md mb-2">Jumlah (Rp)</label>
                         <div class="mx-4">
@@ -60,8 +80,8 @@
                     </div>
 
                     <!-- ======================
-                                 Input: Tanggal Transaksi
-                            ======================= -->
+                                         Input: Tanggal Transaksi
+                                    ======================= -->
                     <div class="mb-3">
                         <label class="block font-semibold text-md mb-2" for="tgl">Tanggal</label>
                         <div class="mx-4">
@@ -72,8 +92,8 @@
                     </div>
 
                     <!-- ======================
-                                 Tombol Aksi
-                            ======================= -->
+                                         Tombol Aksi
+                                    ======================= -->
                     <div class="flex justify-between mt-6">
                         <!-- Tombol Kembali ke halaman daftar kas -->
                         <a href="{{ route('forum.kas', ['slug' => $forums->slug]) }}"

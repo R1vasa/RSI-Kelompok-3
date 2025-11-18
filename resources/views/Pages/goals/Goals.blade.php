@@ -1,7 +1,7 @@
-@extends('Layout.layout') 
+@extends('Layout.layout')
 {{-- Menggunakan layout utama yang bernama "layout" --}}
 
-@section('title', 'Goals') 
+@section('title', 'Goals')
 {{-- Menentukan judul halaman yang akan muncul di tab browser --}}
 
 @section('body')
@@ -14,8 +14,31 @@
         <div class="flex-1 ml-[20%] min-h-screen">
 
             {{-- Header halaman --}}
-            <div class="bg-[#F8FAFC] flex items-center p-1">
-                <h1 class="text-2xl font-bold font-poppins p-4">Daftar Goals</h1>
+            <div class="bg-white border-b border-gray-200 flex items-center justify-between px-6 py-4">
+                <div>
+                    <h1 class="text-2xl font-semibold text-gray-900 font-poppins">Goals</h1>
+                    <p class="text-sm text-gray-500 font-poppins">Memantau aktivitas keuangan anda</p>
+                </div>
+
+                {{-- Bagian kanan header: tombol search dan profil --}}
+                <div class="flex items-center gap-5">
+
+                    {{-- 2️⃣ Input pencarian (hidden secara default) --}}
+                    <input type="text" name="search_judul" id="search-input-field" form="filterForm"
+                        placeholder="Cari & tekan Enter" value="{{ request('search_judul') }}"
+                        class="hidden w-48 text-sm outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 border rounded-lg px-3 py-1.5 shadow-sm">
+
+                    {{-- 3️⃣ Avatar dan info user login --}}
+                    <div class="flex items-center gap-2">
+                        <img class="w-8 h-8 rounded-full"
+                            src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->nama) }}&background=e0e7ff&color=4f46e5"
+                            alt="Avatar">
+                        <div>
+                            <p class="text-sm font-medium text-gray-700 font-poppins">{{ Auth::user()->nama }}</p>
+                            <p class="text-xs text-gray-500 font-poppins">{{ Auth::user()->email }}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             {{-- === Pesan Sukses Setelah Aksi (misal: tambah, edit, hapus) === --}}
@@ -228,4 +251,3 @@
         });
     </script>
 @endsection
-

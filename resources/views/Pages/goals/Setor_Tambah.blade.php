@@ -13,11 +13,31 @@
         {{-- Area utama konten halaman --}}
         <div class="flex-1 ml-[20%] min-h-screen">
             {{-- Header bagian atas halaman --}}
-            <div class="bg-[#F8FAFC] flex items-center p-1">
-                @auth
-                    {{-- Teks judul hanya muncul jika user sudah login --}}
-                    <h1 class="p-4 font-semibold font-poppins text-2xl">Setor Tabungan</h1>
-                @endauth
+            <div class="bg-white border-b border-gray-200 flex items-center justify-between px-6 py-4">
+                <div>
+                    <h1 class="text-2xl font-semibold text-gray-900 font-poppins">Setor Tabungan</h1>
+                    <p class="text-sm text-gray-500 font-poppins">Memantau aktivitas keuangan anda</p>
+                </div>
+
+                {{-- Bagian kanan header: tombol search dan profil --}}
+                <div class="flex items-center gap-5">
+
+                    {{-- 2️⃣ Input pencarian (hidden secara default) --}}
+                    <input type="text" name="search_judul" id="search-input-field" form="filterForm"
+                        placeholder="Cari & tekan Enter" value="{{ request('search_judul') }}"
+                        class="hidden w-48 text-sm outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 border rounded-lg px-3 py-1.5 shadow-sm">
+
+                    {{-- 3️⃣ Avatar dan info user login --}}
+                    <div class="flex items-center gap-2">
+                        <img class="w-8 h-8 rounded-full"
+                            src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->nama) }}&background=e0e7ff&color=4f46e5"
+                            alt="Avatar">
+                        <div>
+                            <p class="text-sm font-medium text-gray-700 font-poppins">{{ Auth::user()->nama }}</p>
+                            <p class="text-xs text-gray-500 font-poppins">{{ Auth::user()->email }}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             {{-- Card / container untuk form setor tabungan --}}
@@ -31,11 +51,9 @@
                     {{-- Input jumlah setor tabungan --}}
                     <div class="mb-3">
                         <label class="block font-medium">Jumlah setor(Rp)</label>
-                        <input type="number" 
-                               name="jumlah_tabungan" 
-                               class="bg-blue-100 opacity-60 w-full border rounded-full px-3 py-2"
-                               placeholder="contoh: 10000" 
-                               required>
+                        <input type="number" name="jumlah_tabungan"
+                            class="bg-blue-100 opacity-60 w-full border rounded-full px-3 py-2" placeholder="contoh: 10000"
+                            required>
                         @error('jumlah_tabungan')
                             {{-- Menampilkan pesan error jika validasi jumlah tabungan gagal --}}
                             <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
@@ -62,4 +80,3 @@
         </div>
     </div>
 @endsection
-

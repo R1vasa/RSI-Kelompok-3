@@ -6,43 +6,61 @@
 
 @section('body')
     <!-- ==========================================================
-             🏛️ HALAMAN TAMBAH FORUM ORGANISASI
-             Deskripsi:
-             Halaman ini digunakan untuk membuat forum baru,
-             lengkap dengan gambar profil, nama, dan deskripsi forum.
-        =========================================================== -->
+                 🏛️ HALAMAN TAMBAH FORUM ORGANISASI
+                 Deskripsi:
+                 Halaman ini digunakan untuk membuat forum baru,
+                 lengkap dengan gambar profil, nama, dan deskripsi forum.
+            =========================================================== -->
     <div class="flex">
         <!-- Sidebar navigasi utama (komponen global) -->
         <x-sidebar></x-sidebar>
 
         <!-- ===============================
-                 AREA KONTEN UTAMA (Bagian kanan)
-            ================================ -->
+                     AREA KONTEN UTAMA (Bagian kanan)
+                ================================ -->
         <div class="flex-1 ml-[20%] min-h-screen">
 
             <!-- Header atas halaman -->
-            <div class="bg-[#F8FAFC] flex items-center p-1">
-                @auth
-                    <!-- Menampilkan sapaan pengguna yang sedang login -->
-                    <h1 class="p-4 font-semibold font-poppins text-2xl">
-                        Welcome, {{ Auth::user()->nama }}
-                    </h1>
-                @endauth
+            <div class="bg-white border-b border-gray-200 flex items-center justify-between px-6 py-4">
+                <div>
+                    <h1 class="text-2xl font-semibold text-gray-900 font-poppins">Tambah Forum</h1>
+                    <p class="text-sm text-gray-500 font-poppins">Memantau aktivitas keuangan anda</p>
+                </div>
+
+                {{-- Bagian kanan header: tombol search dan profil --}}
+                <div class="flex items-center gap-5">
+
+                    {{-- 2️⃣ Input pencarian (hidden secara default) --}}
+                    <input type="text" name="search_judul" id="search-input-field" form="filterForm"
+                        placeholder="Cari & tekan Enter" value="{{ request('search_judul') }}"
+                        class="hidden w-48 text-sm outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 border rounded-lg px-3 py-1.5 shadow-sm">
+
+                    {{-- 3️⃣ Avatar dan info user login --}}
+                    <div class="flex items-center gap-2">
+                        <img class="w-8 h-8 rounded-full"
+                            src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->nama) }}&background=e0e7ff&color=4f46e5"
+                            alt="Avatar">
+                        <div>
+                            <p class="text-sm font-medium text-gray-700 font-poppins">{{ Auth::user()->nama }}</p>
+                            <p class="text-xs text-gray-500 font-poppins">{{ Auth::user()->email }}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- ===============================
-                     FORM TAMBAH FORUM
-                     Method: POST
-                     Action: route('forum.store')
-                     Tujuan: Menyimpan data forum baru ke database
-                ================================ -->
+                         FORM TAMBAH FORUM
+                         Method: POST
+                         Action: route('forum.store')
+                         Tujuan: Menyimpan data forum baru ke database
+                    ================================ -->
             <div class="px-10 py-6 font-poppins">
                 <form action="{{ route('forum.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf {{-- Token keamanan Laravel untuk mencegah CSRF --}}
 
                     <!-- ========================================
-                             Upload Gambar Forum (Foto Profil Forum)
-                        ========================================= -->
+                                 Upload Gambar Forum (Foto Profil Forum)
+                            ========================================= -->
                     <div class="relative">
                         <!-- Preview default sebelum gambar diunggah -->
                         <img src="/image/default_forum.png"
@@ -61,8 +79,8 @@
                     </div>
 
                     <!-- ========================================
-                             Input 1 — Nama Forum
-                        ========================================= -->
+                                 Input 1 — Nama Forum
+                            ========================================= -->
                     <div class="mb-4 mt-8">
                         <label class="block font-semibold text-lg mb-2">Nama Forum</label>
                         <div class="mx-4">
@@ -72,8 +90,8 @@
                     </div>
 
                     <!-- ========================================
-                             Input 2 — Deskripsi Forum
-                        ========================================= -->
+                                 Input 2 — Deskripsi Forum
+                            ========================================= -->
                     <div class="mb-4">
                         <label class="block font-semibold text-lg mb-2">Deskripsi Forum</label>
                         <div class="mx-4">
@@ -83,8 +101,8 @@
                     </div>
 
                     <!-- ========================================
-                             Tombol Aksi (Kembali dan Simpan)
-                        ========================================= -->
+                                 Tombol Aksi (Kembali dan Simpan)
+                            ========================================= -->
                     <div class="flex justify-between mt-6">
                         <!-- Tombol Kembali ke halaman utama forum -->
                         <a href="{{ route('forum.index') }}"
@@ -104,11 +122,11 @@
     </div>
 
     <!-- ==========================================================
-             📸 SCRIPT: PREVIEW GAMBAR FORUM
-             Fungsi:
-             - Menampilkan gambar pratinjau sebelum form disubmit.
-             - Menggunakan File API JavaScript (URL.createObjectURL).
-        =========================================================== -->
+                 📸 SCRIPT: PREVIEW GAMBAR FORUM
+                 Fungsi:
+                 - Menampilkan gambar pratinjau sebelum form disubmit.
+                 - Menggunakan File API JavaScript (URL.createObjectURL).
+            =========================================================== -->
     <script>
         const fileInput = document.getElementById('forumImg');
         const profileImg = document.getElementById('preview');

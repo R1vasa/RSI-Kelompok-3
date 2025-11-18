@@ -6,20 +6,20 @@
 
 @section('body')
     <!-- ===============================================================
-                             HALAMAN FORUM KAS
-                             Fungsi:
-                             - Menampilkan daftar transaksi kas dalam forum organisasi.
-                             - Menyediakan fitur tambah, edit, dan hapus transaksi kas.
-                             - Hanya pengguna dengan role 'bendahara' yang memiliki hak edit/delete.
-                        ============================================================== -->
+                                                     HALAMAN FORUM KAS
+                                                     Fungsi:
+                                                     - Menampilkan daftar transaksi kas dalam forum organisasi.
+                                                     - Menyediakan fitur tambah, edit, dan hapus transaksi kas.
+                                                     - Hanya pengguna dengan role 'bendahara' yang memiliki hak edit/delete.
+                                                ============================================================== -->
     <div class="flex">
 
         <!-- Sidebar Navigasi -->
         <x-sidebar></x-sidebar>
 
         <!-- ======================================
-                                 AREA KONTEN UTAMA
-                            ======================================= -->
+                                                         AREA KONTEN UTAMA
+                                                    ======================================= -->
         <div class="flex-1 ml-[20%] min-h-screen font-poppins">
 
             <!-- Header: Menampilkan Nama Forum -->
@@ -51,8 +51,8 @@
             </div>
 
             <!-- ======================================
-                                     KONTEN UTAMA: DETAIL FORUM & TABEL KAS
-                                ======================================= -->
+                                                             KONTEN UTAMA: DETAIL FORUM & TABEL KAS
+                                                        ======================================= -->
             <div class="p-6">
 
                 <!-- Informasi Forum -->
@@ -69,22 +69,14 @@
                 </div>
 
                 <!-- Header Periode & Tombol Aksi -->
-                <div class="flex justify-between p-2">
-                    <h1 class="text-sm font-semibold">
-                        Periode 1 - 30 November 2023
-                        {{-- Placeholder periode waktu (bisa diubah menjadi dinamis berdasarkan data) --}}
-                    </h1>
-
-                    <!-- Tombol hanya tampil untuk bendahara -->
+                <div class="flex justify-end p-2">
                     @if ($akses->role == 'bendahara')
                         <div class="flex gap-2">
-                            <!-- Tombol Tambah Kas -->
                             <a href="{{ route('tambah.kas.index', ['slug' => $forums->slug]) }}"
                                 class="px-5 py-2 bg-emerald-500 text-white rounded-lg">
                                 Tambah transaksi
                             </a>
 
-                            <!-- Tombol Ekspor Kas -->
                             <a href="#" class="flex items-center gap-2 px-5 py-2 bg-yellow-500 text-white rounded-lg">
                                 <i class='bx bx-export text-lg'></i>
                                 <span>Ekspor</span>
@@ -93,10 +85,11 @@
                     @endif
                 </div>
 
+
                 <!-- ======================================
-                                         TABEL DATA KAS
-                                         Menampilkan daftar transaksi kas organisasi
-                                    ======================================= -->
+                             TABEL DATA KAS
+                             Menampilkan daftar transaksi kas organisasi
+                            ======================================= -->
                 <div class="px-6 py-2">
                     <table class="min-w-full table-auto border-1 border-gray-300">
                         <thead>
@@ -166,9 +159,9 @@
     </div>
 
     <!-- ==========================================================
-                             MODAL KONFIRMASI HAPUS DATA
-                             Digunakan untuk memastikan pengguna yakin ingin menghapus kas.
-                        =========================================================== -->
+                                                     MODAL KONFIRMASI HAPUS DATA
+                                                     Digunakan untuk memastikan pengguna yakin ingin menghapus kas.
+                                                =========================================================== -->
     <div id="confirmModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-white rounded-xl shadow-lg p-6 w-96 text-center">
             <h2 class="text-xl font-semibold text-gray-800 mb-2">Konfirmasi Hapus</h2>
@@ -190,11 +183,11 @@
     </div>
 
     <!-- ==========================================================
-                             SCRIPT HANDLER: HAPUS DATA DENGAN MODAL
-                             Fungsi:
-                             - Menampilkan modal konfirmasi sebelum hapus data.
-                             - Hanya mengirim form setelah dikonfirmasi.
-                        =========================================================== -->
+                                                     SCRIPT HANDLER: HAPUS DATA DENGAN MODAL
+                                                     Fungsi:
+                                                     - Menampilkan modal konfirmasi sebelum hapus data.
+                                                     - Hanya mengirim form setelah dikonfirmasi.
+                                                =========================================================== -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const modal = document.getElementById('confirmModal');

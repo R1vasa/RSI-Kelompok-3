@@ -6,12 +6,12 @@
 
 @section('body')
     <!-- ============================================================
-                HALAMAN FORUM KAS ORGANISASI
-                 Deskripsi:
-                 - Menampilkan seluruh transaksi kas (pemasukan & pengeluaran) forum.
-                 - Dapat difilter berdasarkan periode tanggal.
-                 - Role 'bendahara' memiliki akses tambahan (tambah, edit, hapus, ekspor PDF).
-            ============================================================ -->
+                    HALAMAN FORUM KAS ORGANISASI
+                     Deskripsi:
+                     - Menampilkan seluruh transaksi kas (pemasukan & pengeluaran) forum.
+                     - Dapat difilter berdasarkan periode tanggal.
+                     - Role 'bendahara' memiliki akses tambahan (tambah, edit, hapus, ekspor PDF).
+                ============================================================ -->
 
     <div class="flex">
         <!-- Sidebar navigasi global -->
@@ -21,10 +21,10 @@
         <div class="flex-1 ml-[20%] min-h-screen font-poppins">
 
             <!-- Header Forum: menampilkan nama forum aktif -->
-           <div class="bg-white border-b border-gray-200 flex items-center justify-between px-6 py-4">
+            <div class="bg-white border-b border-gray-200 flex items-center justify-between px-6 py-4">
                 <div>
                     <h1 class="text-2xl font-semibold text-gray-900 font-poppins">{{ $forums->forum }}</h1>
-                    
+
                 </div>
 
                 {{-- Bagian kanan header: tombol search dan profil --}}
@@ -46,6 +46,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
             <!-- Konten utama -->
             <div class="p-6">

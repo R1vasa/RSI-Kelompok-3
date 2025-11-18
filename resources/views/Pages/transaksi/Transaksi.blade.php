@@ -183,7 +183,7 @@
                     </form>
 
                     {{-- Tombol Ekspor PDF dan Tambah Transaksi --}}
-                    <div class="flex items-center gap-3">
+                    <dphp iv class="flex items-center gap-3">
                         {{-- Tombol Ekspor --}}
                         <form action="{{ route('laporan.export.pdf') }}" method="GET">
                             <input type="hidden" name="date_range" value="{{ request('date_range') }}">
@@ -221,7 +221,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($transaksis as $transaksi)
+                            @forelse ($transaksis as $transaksi)
                                 <tr class="hover:bg-gray-50">
                                     {{-- Kolom judul transaksi --}}
                                     <td class="px-4 py-2 font-poppins text-center">{{ $transaksi->judul_transaksi }}</td>
@@ -264,7 +264,14 @@
                                         </div>
                                     </td>
                                 </tr>
-                            @endforeach
+                           @empty
+                                {{-- ✅ INI BAGIAN BARU UNTUK MENAMPILKAN PESAN KOSONG --}}
+                                <tr>
+                                    <td colspan="6" class="text-center text-gray-500 py-4 font-poppins">
+                                        Transaksi tidak ada.
+                                    </td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
